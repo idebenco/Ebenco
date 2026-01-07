@@ -1,8 +1,16 @@
 import api from './api';
-import { AuthResponse } from '../types';
+import { AuthResponse, Product } from '../types';
+
+interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  businessName?: string;
+}
 
 export const authService = {
-  register: async (data: any): Promise<AuthResponse> => {
+  register: async (data: RegisterData): Promise<AuthResponse> => {
     const response = await api.post('/auth/register', data);
     return response.data;
   },
@@ -19,7 +27,7 @@ export const authService = {
 };
 
 export const productService = {
-  getAll: async (params?: any) => {
+  getAll: async (params?: { category?: string; search?: string; available?: boolean }) => {
     const response = await api.get('/products', { params });
     return response.data;
   },
@@ -29,12 +37,12 @@ export const productService = {
     return response.data;
   },
 
-  create: async (data: any) => {
+  create: async (data: Omit<Product, '_id' | 'createdAt' | 'updatedAt'>) => {
     const response = await api.post('/products', data);
     return response.data;
   },
 
-  update: async (id: string, data: any) => {
+  update: async (id: string, data: Partial<Omit<Product, '_id' | 'createdAt' | 'updatedAt'>>) => {
     const response = await api.put(`/products/${id}`, data);
     return response.data;
   },
@@ -46,7 +54,7 @@ export const productService = {
 };
 
 export const orderService = {
-  getAll: async (params?: any) => {
+  getAll: async (params?: { status?: string }) => {
     const response = await api.get('/orders', { params });
     return response.data;
   },
@@ -56,7 +64,11 @@ export const orderService = {
     return response.data;
   },
 
-  create: async (data: any) => {
+  create: async (data: {
+    items: { productId: string; quantity: number }[];
+    deliveryAddress: { street: string; city: string; state: string; zipCode: string };
+    notes?: string;
+  }) => {
     const response = await api.post('/orders', data);
     return response.data;
   },
@@ -83,7 +95,12 @@ export const userService = {
     return response.data;
   },
 
-  update: async (id: string, data: any) => {
+  update: async (id: string, data: Partial<{
+    name: string;
+    phone: string;
+    businessName: string;
+    address: { street: string; city: string; state: string; zipCode: string };
+  }>) => {
     const response = await api.put(`/users/${id}`, data);
     return response.data;
   },
