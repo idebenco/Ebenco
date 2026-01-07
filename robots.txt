@@ -1,0 +1,22 @@
+# Robots.txt for SmallScale Wholesale Foodstuffs Website
+
+# Allow all bots to crawl the entire site
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /admin-login.html
+Disallow: /admin-dashboard.html
+Disallow: /admin-products.html
+Disallow: /dashboard.html
+
+# Disallow any private or temporary directories
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://yourwebsite.com/sitemap.xml
+
+# Crawl-delay (optional, helps prevent overloading server)
+Crawl-delay: 1

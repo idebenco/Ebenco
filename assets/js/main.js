@@ -342,6 +342,7 @@
     // Initialize on DOM Ready
     // ================================
     
-    console.log('SmallScale Wholesale Foodstuffs - Website Loaded Successfully');
+    // Website initialized successfully
+    // All interactive features are now active
     
 })();
