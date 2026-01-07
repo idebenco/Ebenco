@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Frequently Asked Questions about SmallScale wholesale foodstuffs. Find answers to common questions about our products, ordering, delivery, and more.">
+    <title>FAQs - SmallScale Wholesale Foodstuffs</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <style>
+        .faq-page {
+            padding: var(--spacing-xxl) 0;
+        }
+        
+        .page-hero {
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            color: var(--bg-white);
+            margin-bottom: var(--spacing-xxl);
+        }
+        
+        .page-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .faq-search {
+            max-width: 600px;
+            margin: var(--spacing-lg) auto var(--spacing-xxl);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .faq-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xxl);
+        }
+        
+        .category-btn {
+            padding: var(--spacing-md);
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary-color);
+            color: var(--bg-white);
+            border-color: var(--primary-color);
+        }
+        
+        .faq-section {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .faq-section-title {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--primary-light);
+        }
+        
+        .faq-item {
+            background: var(--bg-white);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+            transition: all var(--transition-fast);
+        }
+        
+        .faq-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .faq-question {
+            padding: var(--spacing-md);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all var(--transition-fast);
+        }
+        
+        .faq-question:hover {
+            color: var(--primary-color);
+        }
+        
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform var(--transition-fast);
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-base);
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+        
+        .faq-answer-content {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+        
+        .faq-answer-content ul {
+            margin-left: var(--spacing-lg);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .faq-answer-content li {
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .contact-cta {
+            background: var(--bg-light);
+            padding: var(--spacing-xxl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-top: var(--spacing-xxl);
+        }
+        
+        .contact-cta h3 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .faq-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .faq-section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html">
+                            <span class="logo-text">SMALLSCALE</span>
+                            <span class="logo-tagline">Wholesale Foodstuffs</span>
+                        </a>
+                    </div>
+                    
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <span class="hamburger"></span>
+                    </button>
+                    
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="products.html" class="nav-link">Products</a></li>
+                        <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                        <li><a href="about.html" class="nav-link">About Us</a></li>
+                        <li><a href="contact.html" class="nav-link">Contact</a></li>
+                        <li><a href="faq.html" class="nav-link active">FAQs</a></li>
+                        <li><a href="login.html" class="nav-link">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about our products and services</p>
+        </div>
+    </section>
+
+    <!-- FAQ Page Content -->
+    <section class="faq-page">
+        <div class="container">
+            <!-- Search Box -->
+            <div class="faq-search">
+                <input type="text" 
+                       id="faqSearch" 
+                       class="search-input" 
+                       placeholder="Search for answers...">
+            </div>
+
+            <!-- Category Filters -->
+            <div class="faq-categories">
+                <button class="category-btn active" data-category="all">All FAQs</button>
+                <button class="category-btn" data-category="ordering">Ordering</button>
+                <button class="category-btn" data-category="products">Products</button>
+                <button class="category-btn" data-category="pricing">Pricing</button>
+                <button class="category-btn" data-category="delivery">Delivery</button>
+                <button class="category-btn" data-category="payment">Payment</button>
+            </div>
+
+            <!-- General Questions -->
+            <div class="faq-section" data-category="general">
+                <h2 class="faq-section-title">General Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is SmallScale and what do you offer?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>SmallScale is a leading wholesale foodstuffs supplier in Nigeria. We specialize in providing high-quality bulk food products to restaurants, retailers, food businesses, and institutions across Nigeria. Our product range includes grains, oils, spices, legumes, flour, and other essential food items at competitive wholesale prices.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Who can purchase from SmallScale?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We primarily serve business customers including:</p>
+                            <ul>
+                                <li>Restaurants and eateries</li>
+                                <li>Retail stores and supermarkets</li>
+                                <li>Hotels and hospitality businesses</li>
+                                <li>Catering services</li>
+                                <li>Schools and institutions</li>
+                                <li>Food distributors and wholesalers</li>
+                                <li>Other businesses requiring bulk food supplies</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do I need an account to place an order?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>While you can request a quote without an account, we recommend creating a free account for the best experience. Account benefits include order tracking, quick reordering, saved addresses, purchase history, and access to exclusive deals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ordering Questions -->
+            <div class="faq-section" data-category="ordering">
+                <h2 class="faq-section-title">Ordering Process</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I place an order?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>You can place an order through several methods:</p>
+                            <ul>
+                                <li><strong>Online:</strong> Use our quote request form to specify your products and quantities</li>
+                                <li><strong>Phone:</strong> Call us at +234 800 000 0000</li>
+                                <li><strong>WhatsApp:</strong> Message us at +234 800 000 0000</li>
+                                <li><strong>Email:</strong> Send your order to info@smallscale.com.ng</li>
+                                <li><strong>Visit:</strong> Come to our Lagos showroom during business hours</li>
+                            </ul>
+                            <p>We'll respond with a competitive quote within 24 hours.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is the minimum order quantity?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Minimum order quantities vary by product. Generally, our minimums are designed for wholesale buyers. For specific MOQ information, please contact our sales team or check individual product pages. We're flexible and can accommodate different business sizes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How long does it take to process an order?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Order processing times depend on product availability and order size:</p>
+                            <ul>
+                                <li>Standard orders: 1-2 business days</li>
+                                <li>Large orders: 2-4 business days</li>
+                                <li>Custom orders: 3-5 business days</li>
+                            </ul>
+                            <p>We'll confirm availability and processing time when you place your order.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I modify or cancel my order?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, you can modify or cancel your order before it's processed. Contact us immediately via phone or WhatsApp. Once an order is processed and shipped, cancellation may not be possible, but we'll work with you to find a solution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Questions -->
+            <div class="faq-section" data-category="products">
+                <h2 class="faq-section-title">Products & Quality</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What types of products do you sell?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We offer a comprehensive range of wholesale foodstuffs including:</p>
+                            <ul>
+                                <li><strong>Grains & Cereals:</strong> Rice, corn, garri, and more</li>
+                                <li><strong>Oils & Fats:</strong> Vegetable oil, palm oil</li>
+                                <li><strong>Legumes:</strong> Beans, lentils</li>
+                                <li><strong>Flour & Baking:</strong> Wheat flour, semolina</li>
+                                <li><strong>Spices & Seasonings:</strong> Pepper, curry, salt</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do you ensure product quality?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Quality is our top priority. We:</p>
+                            <ul>
+                                <li>Source from verified and trusted suppliers only</li>
+                                <li>Conduct thorough quality checks on all products</li>
+                                <li>Store products in optimal conditions</li>
+                                <li>Follow strict hygiene and safety standards</li>
+                                <li>Provide 100% satisfaction guarantee</li>
+                                <li>Replace any products that don't meet our quality standards</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Are your products certified?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, all our products meet Nigerian food safety standards and regulations. We work with certified suppliers and can provide relevant documentation upon request.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is the shelf life of your products?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Shelf life varies by product type. We guarantee that all products are delivered with adequate shelf life remaining for business use. Specific shelf life information is available on product packaging and can be provided upon request.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Questions -->
+            <div class="faq-section" data-category="pricing">
+                <h2 class="faq-section-title">Pricing & Discounts</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How competitive are your prices?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We offer highly competitive wholesale prices by leveraging our direct supplier relationships and efficient operations. We regularly review our prices to ensure they remain competitive in the Nigerian market.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do you offer bulk discounts?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes! We offer attractive bulk discounts based on order volume. The more you order, the better the price. Contact our sales team for a customized quote based on your specific requirements.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Are prices listed on your website?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Due to market fluctuations and volume-based pricing, we provide custom quotes for each order. This ensures you get the most competitive pricing based on your specific needs and order size. Request a quote to get current pricing.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do you offer special rates for regular customers?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes! We value long-term partnerships and offer preferential rates to regular customers. Benefits include priority pricing, flexible payment terms, and dedicated account management.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Questions -->
+            <div class="faq-section" data-category="delivery">
+                <h2 class="faq-section-title">Delivery & Shipping</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Which areas do you deliver to?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We deliver to all major cities and towns across Nigeria. Our primary coverage includes Lagos, Abuja, Port Harcourt, Kano, Ibadan, and surrounding areas. For deliveries to other locations, please contact us to confirm availability.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How long does delivery take?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Delivery times vary by location:</p>
+                            <ul>
+                                <li>Lagos: 1-2 business days</li>
+                                <li>Major cities (Abuja, PH, Ibadan): 2-4 business days</li>
+                                <li>Other locations: 3-7 business days</li>
+                            </ul>
+                            <p>We'll provide specific delivery estimates when you place your order.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What are your delivery charges?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Delivery charges depend on location, order size, and weight. We offer free delivery for orders above a certain threshold in Lagos. Contact us for specific delivery costs to your location.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I track my delivery?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes! Once your order is dispatched, you'll receive tracking information via SMS and email. You can also track your order through your account dashboard or contact our customer service team for updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Questions -->
+            <div class="faq-section" data-category="payment">
+                <h2 class="faq-section-title">Payment & Terms</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What payment methods do you accept?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>We accept multiple payment methods for your convenience:</p>
+                            <ul>
+                                <li>Bank transfer</li>
+                                <li>Online payment (card, USSD)</li>
+                                <li>Cash on delivery (for approved customers)</li>
+                                <li>Payment on credit (for verified businesses)</li>
+                                <li>Mobile money (coming soon)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do you offer payment on credit?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, we offer flexible credit terms to verified businesses with good track records. This requires business verification and approval. Contact our sales team to discuss credit options.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is my payment information secure?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Absolutely. We use industry-standard encryption and work with certified payment processors to ensure all transactions are secure. We never store your complete card details on our servers.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I get an invoice for my purchase?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, we provide detailed invoices for all orders. Invoices are sent via email and can also be accessed through your account dashboard. We can customize invoices to meet your business accounting requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact CTA -->
+            <div class="contact-cta">
+                <h3>Still Have Questions?</h3>
+                <p style="color: var(--text-light); margin-bottom: var(--spacing-lg);">
+                    Can't find the answer you're looking for? Our customer service team is here to help!
+                </p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="contact.html" class="btn btn-primary">Contact Us</a>
+                    <a href="https://wa.me/2348000000000" target="_blank" class="btn btn-whatsapp">
+                        <span class="whatsapp-icon">📱</span> WhatsApp Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>About SmallScale</h3>
+                    <p>Your trusted wholesale foodstuffs supplier in Nigeria. We provide premium quality products at competitive prices with reliable delivery nationwide.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="login.html">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Product Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=grains">Grains & Cereals</a></li>
+                        <li><a href="products.html?category=oils">Oils & Fats</a></li>
+                        <li><a href="products.html?category=spices">Spices & Seasonings</a></li>
+                        <li><a href="products.html?category=legumes">Legumes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>📧 info@smallscale.com.ng</li>
+                        <li>📞 +234 800 000 0000</li>
+                        <li>📱 WhatsApp: +234 800 000 0000</li>
+                        <li>📍 Lagos, Nigeria</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SmallScale Wholesale Foodstuffs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // FAQ Accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                const wasActive = item.classList.contains('active');
+                
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(faq => {
+                    faq.classList.remove('active');
+                });
+                
+                // Open clicked item if it wasn't active
+                if (!wasActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Category filtering
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.dataset.category;
+                
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter sections
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    if (category === 'all' || section.dataset.category === category) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('faqSearch');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    item.parentElement.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Hide empty sections
+            document.querySelectorAll('.faq-section').forEach(section => {
+                const visibleItems = section.querySelectorAll('.faq-item[style="display: block;"]');
+                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

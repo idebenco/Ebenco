@@ -1,5 +1,5 @@
 /**
- * Ebenco Wholesale Foodstuffs - Main JavaScript
+ * SmallScale Wholesale Foodstuffs - Main JavaScript
  * Handles navigation, forms, and interactive features
  * 
  * PRODUCTION NOTES:
@@ -342,6 +342,6 @@
     // Initialize on DOM Ready
     // ================================
     
-    console.log('Ebenco Wholesale Foodstuffs - Website Loaded Successfully');
+    console.log('SmallScale Wholesale Foodstuffs - Website Loaded Successfully');
     
 })();

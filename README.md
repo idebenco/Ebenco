@@ -1,4 +1,4 @@
-# Ebenco - Professional Wholesale Foodstuffs Business Website
+# SmallScale - Professional Wholesale Foodstuffs Business Website
 
 A modern, mobile-friendly, and secure wholesale business website for selling foodstuffs online in Nigeria. Built with clean HTML5, CSS3, and vanilla JavaScript for optimal performance and accessibility.
 
@@ -23,7 +23,7 @@ A modern, mobile-friendly, and secure wholesale business website for selling foo
 ## 📁 Project Structure
 
 ```
-Ebenco/
+SmallScale/
 ├── index.html           # Homepage
 ├── products.html        # Product catalog page
 ├── about.html          # About us page
@@ -79,8 +79,8 @@ Ebenco/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/idebenco/Ebenco.git
-   cd Ebenco
+   git clone https://github.com/idsmallscale/SmallScale.git
+   cd SmallScale
    ```
 
 2. **Open in browser**:
@@ -159,7 +159,7 @@ Edit the products grid in `products.html`:
 ```
 
 ### Contact Information
-Update contact details in all HTML files (search for `info@ebenco.com.ng` and phone numbers)
+Update contact details in all HTML files (search for `info@smallscale.com.ng` and phone numbers)
 
 ### WhatsApp Integration
 Replace `2348000000000` with your actual WhatsApp number in all files
@@ -241,7 +241,7 @@ Recommended hosting services in Nigeria:
 ## 📞 Support
 
 For questions or support:
-- Email: info@ebenco.com.ng
+- Email: info@smallscale.com.ng
 - WhatsApp: +234 800 000 0000
 - Phone: +234 800 000 0000
 
@@ -255,7 +255,7 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## 👨‍💻 Author
 
-**Ebenco Development Team**
+**SmallScale Development Team**
 
 ---
 
