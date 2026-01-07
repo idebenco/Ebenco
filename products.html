@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse our extensive catalog of wholesale foodstuffs including grains, oils, spices, and more at competitive prices.">
+    <title>Our Products - Ebenco Wholesale Foodstuffs</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <style>
+        .products-page {
+            padding: var(--spacing-xl) 0;
+            min-height: 60vh;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .filter-section {
+            background: var(--bg-light);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .filter-header {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: var(--bg-white);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: var(--bg-white);
+            border-color: var(--primary-color);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-light);
+            display: none;
+        }
+        
+        .product-card[data-category] {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html">
+                            <span class="logo-text">EBENCO</span>
+                            <span class="logo-tagline">Wholesale Foodstuffs</span>
+                        </a>
+                    </div>
+                    
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <span class="hamburger"></span>
+                    </button>
+                    
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="products.html" class="nav-link active">Products</a></li>
+                        <li><a href="about.html" class="nav-link">About Us</a></li>
+                        <li><a href="contact.html" class="nav-link">Contact</a></li>
+                        <li><a href="quote.html" class="nav-link btn-quote">Get Quote</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Products Page Content -->
+    <section class="products-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Our Products</h1>
+                <p class="section-subtitle">Premium wholesale foodstuffs for your business needs</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-header text-center">
+                    <h3>Search & Filter Products</h3>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="search-input" 
+                           placeholder="Search products...">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Products</button>
+                    <button class="filter-btn" data-filter="grains">Grains & Cereals</button>
+                    <button class="filter-btn" data-filter="oils">Oils & Fats</button>
+                    <button class="filter-btn" data-filter="spices">Spices & Seasonings</button>
+                    <button class="filter-btn" data-filter="legumes">Legumes</button>
+                    <button class="filter-btn" data-filter="flour">Flour & Baking</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <!-- Grains & Cereals -->
+                <div class="product-card" data-category="grains">
+                    <div class="product-image">
+                        <div class="product-badge">Bestseller</div>
+                        <img src="assets/images/product-rice.jpg" alt="Premium Rice" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ERice%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Premium Rice</h3>
+                        <p class="product-description">High-quality long grain rice, perfect for all cooking needs</p>
+                        <div class="product-footer">
+                            <span class="product-unit">50kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="grains">
+                    <div class="product-image">
+                        <img src="assets/images/product-corn.jpg" alt="Yellow Corn" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ECorn%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Yellow Corn</h3>
+                        <p class="product-description">Fresh yellow corn for various culinary applications</p>
+                        <div class="product-footer">
+                            <span class="product-unit">100kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oils & Fats -->
+                <div class="product-card" data-category="oils">
+                    <div class="product-image">
+                        <img src="assets/images/product-oil.jpg" alt="Vegetable Oil" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'16\'%3EVegetable Oil%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Vegetable Oil</h3>
+                        <p class="product-description">Pure refined vegetable oil for cooking and frying</p>
+                        <div class="product-footer">
+                            <span class="product-unit">25L containers</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="oils">
+                    <div class="product-image">
+                        <img src="assets/images/product-palm-oil.jpg" alt="Palm Oil" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EPalm Oil%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Palm Oil</h3>
+                        <p class="product-description">Traditional red palm oil, rich and flavorful</p>
+                        <div class="product-footer">
+                            <span class="product-unit">20L containers</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legumes -->
+                <div class="product-card" data-category="legumes">
+                    <div class="product-image">
+                        <img src="assets/images/product-beans.jpg" alt="Brown Beans" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EBeans%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Brown Beans</h3>
+                        <p class="product-description">Premium brown beans, protein-rich and nutritious</p>
+                        <div class="product-footer">
+                            <span class="product-unit">100kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="legumes">
+                    <div class="product-image">
+                        <img src="assets/images/product-lentils.jpg" alt="Lentils" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ELentils%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Lentils</h3>
+                        <p class="product-description">Quality lentils for soups and various dishes</p>
+                        <div class="product-footer">
+                            <span class="product-unit">50kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flour & Baking -->
+                <div class="product-card" data-category="flour">
+                    <div class="product-image">
+                        <div class="product-badge">New</div>
+                        <img src="assets/images/product-flour.jpg" alt="Wheat Flour" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EFlour%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Wheat Flour</h3>
+                        <p class="product-description">Fine milled wheat flour for baking and cooking</p>
+                        <div class="product-footer">
+                            <span class="product-unit">50kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="flour">
+                    <div class="product-image">
+                        <img src="assets/images/product-semolina.jpg" alt="Semolina" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ESemolina%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Semolina</h3>
+                        <p class="product-description">Premium semolina for swallow and porridge</p>
+                        <div class="product-footer">
+                            <span class="product-unit">25kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spices & Seasonings -->
+                <div class="product-card" data-category="spices">
+                    <div class="product-image">
+                        <img src="assets/images/product-pepper.jpg" alt="Ground Pepper" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EPepper%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Ground Pepper</h3>
+                        <p class="product-description">Freshly ground pepper for seasoning</p>
+                        <div class="product-footer">
+                            <span class="product-unit">10kg packs</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="spices">
+                    <div class="product-image">
+                        <img src="assets/images/product-curry.jpg" alt="Curry Powder" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ECurry%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Curry Powder</h3>
+                        <p class="product-description">Aromatic curry powder blend</p>
+                        <div class="product-footer">
+                            <span class="product-unit">5kg packs</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="grains">
+                    <div class="product-image">
+                        <img src="assets/images/product-garri.jpg" alt="Garri" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EGarri%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Garri (Yellow/White)</h3>
+                        <p class="product-description">Premium quality garri for eba and soaking</p>
+                        <div class="product-footer">
+                            <span class="product-unit">50kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="spices">
+                    <div class="product-image">
+                        <img src="assets/images/product-salt.jpg" alt="Salt" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ESalt%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Refined Salt</h3>
+                        <p class="product-description">Iodized refined salt for cooking</p>
+                        <div class="product-footer">
+                            <span class="product-unit">25kg bags</span>
+                            <a href="quote.html" class="btn-small">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-results">
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Need Help Choosing?</h2>
+                <p>Contact our team for personalized product recommendations</p>
+                <div class="cta-buttons">
+                    <a href="quote.html" class="btn btn-primary">Request a Quote</a>
+                    <a href="contact.html" class="btn btn-secondary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>About Ebenco</h3>
+                    <p>Your trusted wholesale foodstuffs supplier in Nigeria. We provide premium quality products at competitive prices with reliable delivery nationwide.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Product Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=grains">Grains & Cereals</a></li>
+                        <li><a href="products.html?category=oils">Oils & Fats</a></li>
+                        <li><a href="products.html?category=spices">Spices & Seasonings</a></li>
+                        <li><a href="products.html?category=legumes">Legumes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>📧 info@ebenco.com.ng</li>
+                        <li>📞 +234 800 000 0000</li>
+                        <li>📱 WhatsApp: +234 800 000 0000</li>
+                        <li>📍 Lagos, Nigeria</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ebenco Wholesale Foodstuffs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
