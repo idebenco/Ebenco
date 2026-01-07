@@ -159,7 +159,7 @@ Edit the products grid in `products.html`:
 ```
 
 ### Contact Information
-Update contact details in all HTML files (search for `info@smallscale.com.ng` and phone numbers)
+Update contact details in all HTML files (search for `damseljummy853@gmail.com` and phone numbers)
 
 ### WhatsApp Integration
 Replace `2348000000000` with your actual WhatsApp number in all files
@@ -241,9 +241,9 @@ Recommended hosting services in Nigeria:
 ## 📞 Support
 
 For questions or support:
-- Email: info@smallscale.com.ng
-- WhatsApp: +234 800 000 0000
-- Phone: +234 800 000 0000
+- Email: damseljummy853@gmail.com
+- WhatsApp: +234 704 609 9135
+- Phone: +234 704 609 9135
 
 ## 📄 License
 
