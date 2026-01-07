@@ -45,6 +45,12 @@
             border: 2px solid var(--border-color);
             border-radius: var(--radius-md);
             font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
         
         .filter-buttons {
@@ -279,7 +285,7 @@
         }
         
         .btn-add-cart:hover {
-            background: #d66f00;
+            background: var(--secondary-hover);
             transform: translateY(-2px);
         }
         
@@ -299,7 +305,7 @@
         }
         
         .btn-quote:hover {
-            background: #245a3f;
+            background: var(--primary-hover);
             transform: translateY(-2px);
         }
         
@@ -1106,8 +1112,9 @@
             // Show feedback
             const btn = event.target;
             const originalText = btn.textContent;
+            const originalBg = getComputedStyle(btn).background;
             btn.textContent = '✓ Added!';
-            btn.style.background = '#28a745';
+            btn.style.background = 'var(--success-hover)';
             setTimeout(() => {
                 btn.textContent = originalText;
                 btn.style.background = '';
@@ -1179,8 +1186,15 @@
         
         function proceedToCheckout() {
             if (cart.length > 0) {
-                // Save cart info to session for checkout page
-                alert('Proceeding to checkout...\n\nTotal Items: ' + cart.reduce((sum, item) => sum + item.quantity, 0) + '\nTotal Amount: ₦' + cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toLocaleString() + '\n\nRedirecting to quote form...');
+                // Calculate totals once
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                
+                // Save cart info for checkout page
+                sessionStorage.setItem('checkoutCart', JSON.stringify(cart));
+                sessionStorage.setItem('checkoutTotal', totalAmount);
+                
+                // Redirect to quote form
                 window.location.href = 'quote.html';
             }
         }

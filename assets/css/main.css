@@ -13,7 +13,9 @@
     --primary-color: #2d6a4f;
     --primary-dark: #1b4332;
     --primary-light: #40916c;
+    --primary-hover: #245a3f;
     --secondary-color: #f77f00;
+    --secondary-hover: #d66f00;
     --accent-color: #d62828;
     --text-dark: #212529;
     --text-light: #6c757d;
@@ -21,6 +23,7 @@
     --bg-white: #ffffff;
     --border-color: #dee2e6;
     --success-color: #52b788;
+    --success-hover: #28a745;
     --whatsapp-color: #25D366;
     
     /* Typography */
