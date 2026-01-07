@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - SmallScale Wholesale Foodstuffs</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        :root {
+            --admin-primary: #1e40af;
+            --admin-primary-dark: #1e3a8a;
+            --admin-danger: #dc2626;
+            --admin-bg: #f9fafb;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .admin-login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .admin-login-header {
+            background: var(--admin-primary);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .admin-login-header h1 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .admin-login-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .admin-login-form {
+            padding: 40px 30px;
+        }
+
+        .security-notice {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .security-notice strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #92400e;
+        }
+
+        .security-notice p {
+            margin: 0;
+            font-size: 13px;
+            color: #78350f;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--admin-primary);
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-admin-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--admin-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admin-login:hover {
+            background: var(--admin-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .2fa-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e5e7eb;
+            display: none;
+        }
+
+        .2fa-section.active {
+            display: block;
+        }
+
+        .2fa-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        .2fa-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .2fa-method-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .2fa-method-btn.active {
+            background: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 20px 30px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .login-footer a {
+            color: var(--admin-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-attempts {
+            background: #fee2e2;
+            border-left: 4px solid var(--admin-danger);
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #991b1b;
+            display: none;
+        }
+
+        .login-attempts.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .admin-login-header {
+                padding: 30px 20px;
+            }
+
+            .admin-login-header h1 {
+                font-size: 24px;
+            }
+
+            .admin-login-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-header">
+            <h1>🔐 Admin Login</h1>
+            <p>SmallScale Wholesale Foodstuffs</p>
+        </div>
+
+        <div class="admin-login-form">
+            <div class="security-notice">
+                <strong>🔒 Secure Admin Access</strong>
+                <p>This area is restricted to authorized administrators only. All login attempts are logged and monitored.</p>
+            </div>
+
+            <div class="login-attempts" id="loginAttempts">
+                <strong>⚠️ Warning:</strong> You have <span id="attemptsLeft">2</span> login attempts remaining before temporary lockout.
+            </div>
+
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminEmail">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="adminEmail" 
+                        name="email" 
+                        placeholder="admin@smallscale.com.ng"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input 
+                        type="password" 
+                        id="adminPassword" 
+                        name="password" 
+                        placeholder="Enter your secure password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" id="rememberMe">
+                        <span>Remember me for 30 days</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-admin-login">
+                    Sign In Securely
+                </button>
+
+                <div class="2fa-section" id="twoFactorSection">
+                    <h3>🔐 Two-Factor Authentication Required</h3>
+                    <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">
+                        Choose your preferred verification method:
+                    </p>
+                    
+                    <div class="2fa-methods">
+                        <button type="button" class="2fa-method-btn active" data-method="sms">
+                            📱 SMS Code
+                        </button>
+                        <button type="button" class="2fa-method-btn" data-method="app">
+                            🔑 Auth App
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="verificationCode">Enter 6-Digit Code</label>
+                        <input 
+                            type="text" 
+                            id="verificationCode" 
+                            name="code" 
+                            placeholder="000000"
+                            maxlength="6"
+                            pattern="[0-9]{6}"
+                        >
+                    </div>
+
+                    <button type="button" class="btn-admin-login" id="verifyCodeBtn">
+                        Verify & Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <p>
+                Protected by enterprise-grade security | 
+                <a href="/">Back to Website</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Admin login demo functionality
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+
+            // Demo: Show 2FA section
+            if (email && password) {
+                document.getElementById('twoFactorSection').classList.add('active');
+                alert('Demo: In production, a 2FA code would be sent to your registered phone/email.');
+            }
+        });
+
+        // 2FA method selection
+        document.querySelectorAll('.2fa-method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.2fa-method-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Verify code button
+        document.getElementById('verifyCodeBtn')?.addEventListener('click', function() {
+            const code = document.getElementById('verificationCode').value;
+            
+            if (code.length === 6) {
+                alert('Demo: In production, you would be redirected to the admin dashboard.\n\nFor demo purposes, please navigate to admin-dashboard.html');
+                // In production: window.location.href = 'admin-dashboard.html';
+            } else {
+                alert('Please enter a valid 6-digit code.');
+            }
+        });
+
+        // Demo: Show warning after failed attempts
+        let failedAttempts = 0;
+        document.getElementById('adminLoginForm').addEventListener('submit', function() {
+            failedAttempts++;
+            if (failedAttempts >= 1) {
+                document.getElementById('loginAttempts').classList.add('show');
+                document.getElementById('attemptsLeft').textContent = 3 - failedAttempts;
+            }
+        });
+    </script>
+</body>
+</html>
