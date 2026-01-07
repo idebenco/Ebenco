@@ -102,6 +102,7 @@ frontend/
 ### Public Routes
 - `/` - Home page
 - `/products` - Product listing
+- `/pricing` - Wholesale pricing information ⭐ NEW
 - `/about` - About us
 - `/contact` - Contact page
 - `/login` - User login

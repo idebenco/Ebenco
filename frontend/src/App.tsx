@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import WholesalePricing from './pages/WholesalePricing';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
@@ -28,6 +29,7 @@ const App: React.FC = () => {
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/pricing" element={<WholesalePricing />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />

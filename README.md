@@ -6,6 +6,7 @@ A complete full-stack wholesale business website for selling foodstuffs online. 
 
 ### Public Features
 - **Product Catalog**: Browse quality foodstuffs with search and filter functionality
+- **Wholesale Pricing**: Comprehensive pricing information with tier breakdowns and examples
 - **User Registration**: Easy sign-up process for new customers
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **About & Contact Pages**: Learn about the business and get in touch
@@ -239,6 +240,7 @@ Ebenco/
 
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed system architecture, data models, and API documentation
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide for production
+- **[FRONTEND_DESIGN.md](./FRONTEND_DESIGN.md)** - Frontend design, component structure, and user flow ⭐ NEW
 - **[Backend README](./backend/README.md)** - Backend-specific documentation
 - **[Frontend README](./frontend/README.md)** - Frontend-specific documentation
 
