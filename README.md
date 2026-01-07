@@ -13,8 +13,14 @@ A modern, mobile-friendly, and secure wholesale business website for selling foo
 
 ### Business Features
 - Professional homepage with hero section and featured products
-- Complete product catalog with filtering and search functionality
+- Complete product catalog with retail shopping cart and filtering
+- Retail shopping cart with LocalStorage persistence
+- Dual pricing (retail + wholesale bulk discounts)
 - Quote request system for wholesale inquiries
+- Customer login and registration system
+- Customer dashboard for order management
+- FAQs page with searchable questions
+- Pricing tiers page (Starter, Business, Enterprise)
 - Contact form with validation
 - WhatsApp integration for quick customer support (Nigeria-friendly)
 - About Us page showcasing business values and mission
@@ -24,18 +30,23 @@ A modern, mobile-friendly, and secure wholesale business website for selling foo
 
 ```
 SmallScale/
-├── index.html           # Homepage
-├── products.html        # Product catalog page
-├── about.html          # About us page
-├── contact.html        # Contact page
-├── quote.html          # Quote request page
+├── index.html                      # Homepage
+├── products.html                   # Product catalog with shopping cart
+├── pricing.html                    # Pricing tiers and bulk discounts
+├── about.html                      # About us page
+├── contact.html                    # Contact page
+├── faq.html                        # Frequently asked questions
+├── login.html                      # Customer login and registration
+├── dashboard.html                  # Customer dashboard (order management)
+├── quote.html                      # Quote request page
+├── CUSTOMER_ACCESS_SYSTEM.md       # Customer access system documentation
 ├── assets/
 │   ├── css/
-│   │   ├── main.css           # Main stylesheet
-│   │   └── responsive.css     # Responsive/mobile styles
+│   │   ├── main.css               # Main stylesheet with cart styles
+│   │   └── responsive.css         # Responsive/mobile styles
 │   ├── js/
-│   │   └── main.js            # JavaScript functionality
-│   └── images/                # Product and brand images
+│   │   └── main.js                # JavaScript (cart, forms, navigation)
+│   └── images/                    # Product and brand images
 ├── README.md
 └── LICENSE
 ```
@@ -106,17 +117,53 @@ SmallScale/
 
 ### Homepage (index.html)
 - Hero section with clear value proposition
+- Business introduction with statistics
+- 6 key benefits section
+- Product categories section
 - Featured products showcase
-- Key benefits and features
-- Call-to-action sections
-- Why choose us section
+- Trust elements and customer types
+- Multiple call-to-action sections
 
-### Products (products.html)
-- Complete product catalog
+### Products (products.html) 🛒
+- Complete product catalog (12 products)
+- **Retail shopping cart** with floating widget
+- Dual pricing (retail + bulk discounts)
+- Minimum order quantities displayed
 - Category filtering (Grains, Oils, Spices, Legumes, Flour)
-- Search functionality
-- Product cards with descriptions and units
-- Quick quote buttons
+- Real-time search functionality
+- Quantity selectors with units
+- Add to Cart and Request Quote buttons
+- Cart modal with checkout
+
+### Pricing (pricing.html)
+- 3 pricing tiers (Starter, Business, Enterprise)
+- Volume-based discount structure
+- Sample pricing table with 6 products
+- Discount levels visualization
+- Price match guarantee
+
+### Customer Login (login.html)
+- Dual-tab interface (Sign In / Create Account)
+- Email/password authentication
+- Business registration form
+- Alternative login methods (Email OTP, Phone)
+- Account benefits section
+
+### Customer Dashboard (dashboard.html) ⭐ NEW
+- Account overview with tier badge
+- Order statistics dashboard
+- Recent orders list with status
+- Active quotes section
+- Quick actions menu
+- Profile settings access
+- Order tracking
+
+### FAQs (faq.html)
+- 24 questions across 6 categories
+- Real-time search functionality
+- Category filtering
+- Accordion-style expandable answers
+- Contact CTA for additional help
 
 ### About Us (about.html)
 - Company mission and values
@@ -130,6 +177,7 @@ SmallScale/
 - Multiple contact methods
 - Quick contact options (Phone, WhatsApp, Email)
 - Location information
+- Showroom visit section
 
 ### Get Quote (quote.html)
 - Comprehensive quote request form
@@ -225,18 +273,42 @@ Recommended hosting services in Nigeria:
 - Mobile-friendly (Google's mobile-first indexing)
 - Fast loading times
 
+## 🔑 Customer Access System
+
+A comprehensive customer access system has been designed for this wholesale website. See **[CUSTOMER_ACCESS_SYSTEM.md](CUSTOMER_ACCESS_SYSTEM.md)** for complete documentation covering:
+
+- **Customer Registration Process** - Business verification and application workflow
+- **Approval System** - Multi-stage approval with admin review
+- **Login & Authentication** - Email/password, OTP, security features
+- **Access Levels & Permissions** - Tiered access (Starter, Business, Enterprise)
+- **Wholesale Pricing Access** - Dynamic pricing based on customer tier
+- **Order Management** - Retail orders, wholesale quotes, standing orders
+- **Customer Dashboard** - Order tracking, quote management, account settings
+- **Backend Requirements** - API endpoints, database schema, tech stack
+- **Implementation Phases** - 7-phase rollout plan
+
+### Key Features of Access System
+✅ Business verification with CAC registration
+✅ Tiered pricing (10%, 20%, 30% discounts)
+✅ Customer approval workflow
+✅ Order and quote management
+✅ Payment terms and credit management
+✅ Account dashboard with analytics
+✅ Admin backend for customer/order management
+
 ## 🛠️ Future Enhancements
 
-- Backend integration for form submissions
-- Database integration for product management
-- Shopping cart functionality
-- User accounts and order tracking
-- Payment gateway integration
-- Admin dashboard
-- Email notifications
-- SMS notifications for Nigeria
+- Backend API implementation (see CUSTOMER_ACCESS_SYSTEM.md)
+- Database integration for customer and product management
+- Payment gateway integration (Paystack, Flutterwave)
+- Admin dashboard for customer approval and order management
+- Email and SMS notifications
+- Order tracking with delivery updates
+- Customer account credit management
+- Advanced analytics and reporting
 - Multi-language support (English/Pidgin)
 - Progressive Web App (PWA) features
+- Mobile app (iOS/Android)
 
 ## 📞 Support
 
