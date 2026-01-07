@@ -1,6 +1,13 @@
 /**
  * Ebenco Wholesale Foodstuffs - Main JavaScript
  * Handles navigation, forms, and interactive features
+ * 
+ * PRODUCTION NOTES:
+ * - Form submissions currently use mock functionality for demonstration
+ * - In production, replace setTimeout with actual AJAX/Fetch API calls to secure backend
+ * - Implement proper CSRF protection for all form submissions
+ * - Add server-side validation in addition to client-side validation
+ * - Consider adding reCAPTCHA or similar spam protection
  */
 
 (function() {
@@ -123,6 +130,7 @@
     function handleFormSubmission(form) {
         const formData = new FormData(form);
         const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton ? submitButton.textContent : '';
         
         // Disable submit button
         if (submitButton) {
@@ -130,14 +138,15 @@
             submitButton.textContent = 'Sending...';
         }
         
-        // Show success message (in production, this would submit to a server)
+        // Show success message (in production, this would submit to a secure backend endpoint)
+        // TODO: Replace with actual form submission to server with CSRF protection
         setTimeout(() => {
             showSuccessMessage(form);
             form.reset();
             
             if (submitButton) {
                 submitButton.disabled = false;
-                submitButton.textContent = 'Send Message';
+                submitButton.textContent = originalButtonText;
             }
         }, 1000);
     }

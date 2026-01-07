@@ -301,7 +301,6 @@ ul {
     color: var(--bg-white);
 }
 
-.btn-small,
 .btn-small {
     padding: var(--spacing-xs) var(--spacing-md);
     font-size: 0.875rem;
