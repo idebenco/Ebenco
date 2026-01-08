@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - SmallScale Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; }
+        
+        /* Top Nav */
+        .admin-topnav { background: #1f2937; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .admin-topnav h1 { font-size: 20px; }
+        .logout-btn { background: #ef4444; padding: 8px 16px; border-radius: 6px; text-decoration: none; color: white; font-size: 14px; }
+        
+        /* Layout */
+        .admin-layout { display: flex; min-height: calc(100vh - 70px); }
+        .admin-sidebar { width: 260px; background: #1f2937; color: white; padding: 20px 0; }
+        .admin-content { flex: 1; padding: 30px; }
+        
+        /* Sidebar */
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-menu a { display: block; padding: 12px 20px; color: #d1d5db; text-decoration: none; transition: all 0.3s; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: #374151; color: white; }
+        .sidebar-menu .menu-icon { margin-right: 10px; }
+        
+        /* Page Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .page-header h2 { font-size: 24px; color: #111827; }
+        
+        /* Buttons */
+        .btn { padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; display: inline-block; border: none; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; margin-right: 5px; }
+        
+        /* Filters */
+        .filters-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .filters-row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 600; color: #374151; }
+        .filter-group input, .filter-group select { width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 14px; }
+        
+        /* Products Table */
+        .products-section { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f3f4f6; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+        th { font-weight: 600; color: #374151; }
+        .product-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .status-badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-inactive { background: #fee2e2; color: #991b1b; }
+        .status-low-stock { background: #fef3c7; color: #92400e; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { font-size: 20px; color: #111827; }
+        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 14px; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        @media (max-width: 768px) {
+            .admin-layout { flex-direction: column; }
+            .admin-sidebar { width: 100%; }
+            .filters-row { flex-direction: column; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="admin-topnav">
+        <h1>🔐 SmallScale Admin - Products</h1>
+        <a href="admin-login.html" class="logout-btn">Logout</a>
+    </nav>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html"><span class="menu-icon">📊</span> Dashboard</a></li>
+                <li><a href="#" class="active"><span class="menu-icon">📦</span> Products</a></li>
+                <li><a href="#orders"><span class="menu-icon">🛒</span> Orders</a></li>
+                <li><a href="#customers"><span class="menu-icon">👥</span> Customers</a></li>
+                <li><a href="#quotes"><span class="menu-icon">📋</span> Quotes</a></li>
+                <li><a href="#payments"><span class="menu-icon">💰</span> Payments</a></li>
+                <li><a href="#content"><span class="menu-icon">📄</span> Content</a></li>
+                <li><a href="#settings"><span class="menu-icon">⚙️</span> Settings</a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <div class="page-header">
+                <h2>Product Management</h2>
+                <button class="btn btn-success" id="addProductBtn">+ Add New Product</button>
+            </div>
+            
+            <div class="filters-section">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label>Search Products</label>
+                        <input type="text" placeholder="Search by name, SKU...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select>
+                            <option>All Categories</option>
+                            <option>Grains & Cereals</option>
+                            <option>Oils & Fats</option>
+                            <option>Spices & Seasonings</option>
+                            <option>Legumes & Beans</option>
+                            <option>Flour & Baking</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select>
+                            <option>All Status</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary" style="width: 100%;">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox"></th>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Retail Price</th>
+                            <th>Bulk Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td><div class="product-img" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🌾</div></td>
+                            <td><strong>Premium Rice</strong><br><small>SKU: RICE-001</small></td>
+                            <td>Grains & Cereals</td>
+                            <td>₦32,000</td>
+                            <td>₦28,000</td>
+                            <td><span class="status-badge status-low-stock">5 bags</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-product-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td><div class="product-img" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🌽</div></td>
+                            <td><strong>Yellow Corn</strong><br><small>SKU: CORN-001</small></td>
+                            <td>Grains & Cereals</td>
+                            <td>₦45,000</td>
+                            <td>₦40,000</td>
+                            <td>15 bags</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-product-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td><div class="product-img" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🫗</div></td>
+                            <td><strong>Vegetable Oil</strong><br><small>SKU: OIL-001</small></td>
+                            <td>Oils & Fats</td>
+                            <td>₦18,000</td>
+                            <td>₦16,000</td>
+                            <td><span class="status-badge status-low-stock">8 cont.</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-product-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td><div class="product-img" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🌶️</div></td>
+                            <td><strong>Ground Pepper</strong><br><small>SKU: SPICE-001</small></td>
+                            <td>Spices & Seasonings</td>
+                            <td>₦8,500</td>
+                            <td>₦7,500</td>
+                            <td><span class="status-badge status-low-stock">3 packs</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-product-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td><div class="product-img" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🫘</div></td>
+                            <td><strong>Brown Beans</strong><br><small>SKU: BEAN-001</small></td>
+                            <td>Legumes & Beans</td>
+                            <td>₦45,000</td>
+                            <td>₦40,000</td>
+                            <td>20 bags</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-product-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>Showing 5 of 12 products</div>
+                    <div>
+                        <button class="btn btn-sm btn-primary">Previous</button>
+                        <button class="btn btn-sm btn-primary">Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Product</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Product Name *</label>
+                    <input type="text" placeholder="Enter product name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select required>
+                            <option value="">Select category</option>
+                            <option>Grains & Cereals</option>
+                            <option>Oils & Fats</option>
+                            <option>Spices & Seasonings</option>
+                            <option>Legumes & Beans</option>
+                            <option>Flour & Baking</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>SKU</label>
+                        <input type="text" placeholder="Auto-generated">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea placeholder="Enter product description"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Retail Price (₦) *</label>
+                        <input type="number" placeholder="32000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bulk Price (₦)</label>
+                        <input type="number" placeholder="28000">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bulk Threshold</label>
+                        <input type="number" placeholder="10" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Min. Order Quantity</label>
+                        <input type="number" placeholder="1" value="1">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stock Level *</label>
+                        <input type="number" placeholder="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select>
+                            <option>50kg bag</option>
+                            <option>25L container</option>
+                            <option>10kg pack</option>
+                            <option>pieces</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" accept="image/*">
+                    <small style="color: #6b7280;">Max size: 2MB. Formats: JPG, PNG, WebP</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Product</label>
+                        <select>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">Save Product</button>
+                    <button type="button" class="btn btn-danger" id="cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('productModal');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const modalTitle = document.getElementById('modalTitle');
+        const productForm = document.getElementById('productForm');
+
+        // Open modal for adding product
+        addProductBtn.addEventListener('click', () => {
+            modalTitle.textContent = 'Add New Product';
+            productForm.reset();
+            modal.classList.add('show');
+        });
+
+        // Open modal for editing product
+        document.querySelectorAll('.edit-product-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modalTitle.textContent = 'Edit Product';
+                modal.classList.add('show');
+                // In production: Load product data into form
+            });
+        });
+
+        // Close modal
+        [closeModal, cancelBtn].forEach(el => {
+            el.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+        });
+
+        // Submit form
+        productForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Demo: In production, product would be saved to database.');
+            modal.classList.remove('show');
+            // In production: Send data to backend API
+        });
+
+        // Close modal on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

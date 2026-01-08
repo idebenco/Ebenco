@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Customer dashboard for SmallScale wholesale foodstuffs. Manage your orders, track deliveries, and access wholesale pricing.">
+    <title>Customer Dashboard - SmallScale Wholesale Foodstuffs</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <style>
+        .dashboard-page {
+            min-height: 100vh;
+            background: var(--bg-light);
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .dashboard-header {
+            background: var(--bg-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .dashboard-welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+        
+        .welcome-text h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .account-status {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: linear-gradient(135deg, var(--primary-color), #1e4d3a);
+            color: white;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .stat-card {
+            background: var(--bg-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+        
+        .dashboard-section {
+            background: var(--bg-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .view-all-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .view-all-link:hover {
+            text-decoration: underline;
+        }
+        
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            transition: border-color 0.3s ease;
+        }
+        
+        .order-item:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .order-info h4 {
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .order-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .order-status {
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-lg);
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .action-icon {
+            font-size: 2rem;
+        }
+        
+        .last-login-text {
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .dashboard-section-spaced {
+            margin-top: var(--spacing-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <h2>SMALLSCALE</h2>
+                    <span>WHOLESALE FOODSTUFFS</span>
+                </a>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="faq.html">FAQs</a></li>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="#" id="logoutBtn" class="btn btn-secondary">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Page -->
+    <main class="dashboard-page">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-welcome">
+                    <div class="welcome-text">
+                        <h1>Welcome back, <span id="customerName">Customer</span>! 👋</h1>
+                        <p>
+                            <span class="account-status status-active" id="accountStatus">Active Account</span>
+                            <span class="tier-badge" id="tierBadge">
+                                <span>⭐</span>
+                                <span>Business Tier - Up to 20% OFF</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="last-login-text">Last login: Dec 15, 2024</p>
+                        <a href="quote.html" class="btn btn-primary">Request Quote</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚚</div>
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Active Deliveries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">₦2.4M</div>
+                    <div class="stat-label">Total Spent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Pending Quotes</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Recent Orders -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Orders</h2>
+                        <a href="#" class="view-all-link">View All →</a>
+                    </div>
+                    <div class="order-list">
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Order #ORD-2024-001</h4>
+                                <div class="order-meta">
+                                    <span>📅 Dec 10, 2024</span>
+                                    <span>💰 ₦450,000</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-shipped">Shipped</span>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Order #ORD-2024-002</h4>
+                                <div class="order-meta">
+                                    <span>📅 Dec 8, 2024</span>
+                                    <span>💰 ₦320,000</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-processing">Processing</span>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Order #ORD-2024-003</h4>
+                                <div class="order-meta">
+                                    <span>📅 Dec 5, 2024</span>
+                                    <span>💰 ₦890,000</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-delivered">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Quotes -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Active Quotes</h2>
+                        <a href="#" class="view-all-link">View All →</a>
+                    </div>
+                    <div class="order-list">
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Quote #QTE-2024-015</h4>
+                                <div class="order-meta">
+                                    <span>📅 Requested: Dec 12, 2024</span>
+                                    <span>⏰ Expires: Dec 14, 2024</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-primary">Review</a>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Quote #QTE-2024-016</h4>
+                                <div class="order-meta">
+                                    <span>📅 Requested: Dec 11, 2024</span>
+                                    <span>⏰ Expires: Dec 13, 2024</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-primary">Review</a>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Quote #QTE-2024-017</h4>
+                                <div class="order-meta">
+                                    <span>📅 Requested: Dec 9, 2024</span>
+                                    <span>⏰ Expires: Dec 11, 2024</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-secondary">Expired</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-section dashboard-section-spaced">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                </div>
+                <div class="quick-actions">
+                    <a href="products.html" class="quick-action-btn">
+                        <span class="action-icon">🛒</span>
+                        <span>Browse Products</span>
+                    </a>
+                    <a href="quote.html" class="quick-action-btn">
+                        <span class="action-icon">📋</span>
+                        <span>Request Quote</span>
+                    </a>
+                    <a href="#" class="quick-action-btn">
+                        <span class="action-icon">📦</span>
+                        <span>Track Order</span>
+                    </a>
+                    <a href="#" class="quick-action-btn">
+                        <span class="action-icon">💳</span>
+                        <span>View Invoices</span>
+                    </a>
+                    <a href="#" class="quick-action-btn">
+                        <span class="action-icon">⚙️</span>
+                        <span>Account Settings</span>
+                    </a>
+                    <a href="contact.html" class="quick-action-btn">
+                        <span class="action-icon">💬</span>
+                        <span>Contact Support</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About SmallScale</h3>
+                    <p>Your trusted wholesale foodstuffs supplier in Nigeria. We provide premium quality products at competitive prices with reliable delivery nationwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Product Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=grains">Grains & Cereals</a></li>
+                        <li><a href="products.html?category=oils">Oils & Fats</a></li>
+                        <li><a href="products.html?category=spices">Spices & Seasonings</a></li>
+                        <li><a href="products.html?category=legumes">Legumes & Beans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>📧 damseljummy853@gmail.com</li>
+                        <li>📞 +234 704 609 9135</li>
+                        <li>💬 WhatsApp: +234 704 609 9135</li>
+                        <li>📍 Lagos, Nigeria</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SmallScale Wholesale Foodstuffs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Mock customer data - In production, this would come from backend
+        const customerData = {
+            name: "ABC Restaurant Ltd",
+            email: "contact@abcrestaurant.com",
+            tier: "business", // starter, business, enterprise
+            status: "active", // pending, active, suspended
+            lastLogin: "2024-12-15T10:30:00",
+            stats: {
+                totalOrders: 12,
+                activeDeliveries: 2,
+                totalSpent: 2400000,
+                pendingQuotes: 3
+            }
+        };
+
+        // Load customer data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomerData();
+            
+            // Add logout event listener
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+        });
+
+        function loadCustomerData() {
+            // In production, fetch from API
+            // For now, use mock data
+            document.getElementById('customerName').textContent = customerData.name;
+            
+            // Set account status
+            const statusElement = document.getElementById('accountStatus');
+            statusElement.textContent = customerData.status === 'active' ? 'Active Account' : 
+                                       customerData.status === 'pending' ? 'Pending Approval' : 'Account Suspended';
+            statusElement.className = 'account-status ' + 
+                (customerData.status === 'active' ? 'status-active' : 'status-pending');
+            
+            // Set tier badge
+            const tierBadge = document.getElementById('tierBadge');
+            let tierText = '';
+            if (customerData.tier === 'starter') {
+                tierText = 'Starter Tier - Up to 10% OFF';
+            } else if (customerData.tier === 'business') {
+                tierText = 'Business Tier - Up to 20% OFF';
+            } else if (customerData.tier === 'enterprise') {
+                tierText = 'Enterprise Tier - Up to 30% OFF';
+            }
+            tierBadge.innerHTML = `<span>⭐</span><span>${tierText}</span>`;
+        }
+
+        function logout() {
+            // In production, clear session/token and redirect
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear localStorage
+                localStorage.removeItem('customerToken');
+                localStorage.removeItem('customerData');
+                // Redirect to login
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse our extensive catalog of wholesale and retail foodstuffs including grains, oils, spices, and more at competitive prices.">
+    <title>Our Products - SmallScale Wholesale & Retail Foodstuffs</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <style>
+        .products-page {
+            padding: var(--spacing-xl) 0;
+            min-height: 60vh;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .filter-section {
+            background: var(--bg-light);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: var(--bg-white);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: var(--bg-white);
+            border-color: var(--primary-color);
+        }
+        
+        /* Shopping Cart Styles */
+        .cart-widget {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--bg-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 999;
+            min-width: 200px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .cart-widget:hover {
+            box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+        }
+        
+        .cart-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .cart-icon {
+            font-size: 1.5rem;
+        }
+        
+        .cart-count {
+            background: var(--secondary-color);
+            color: var(--bg-white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .cart-total {
+            margin-top: var(--spacing-xs);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* Product Card Redesign for Retail */
+        .product-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: var(--spacing-sm);
+            left: var(--spacing-sm);
+            background: var(--accent-color);
+            color: var(--bg-white);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .wholesale-badge {
+            position: absolute;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
+            background: var(--primary-color);
+            color: var(--bg-white);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .product-info {
+            padding: var(--spacing-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .product-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.5;
+        }
+        
+        .product-pricing {
+            background: var(--bg-light);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .price-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .price-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .bulk-price {
+            color: var(--secondary-color);
+        }
+        
+        .min-order-info {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .quantity-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .quantity-input {
+            width: 80px;
+            padding: 6px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        
+        .quantity-unit {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: auto;
+        }
+        
+        .btn-add-cart {
+            flex: 1;
+            background: var(--secondary-color);
+            color: var(--bg-white);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .btn-add-cart:hover {
+            background: var(--secondary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .btn-quote {
+            flex: 1;
+            background: var(--primary-color);
+            color: var(--bg-white);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-quote:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-modal.active {
+            display: flex;
+        }
+        
+        .cart-content {
+            background: var(--bg-white);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: var(--radius-lg);
+            overflow-y: auto;
+        }
+        
+        .cart-modal-header {
+            padding: var(--spacing-md);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .cart-items {
+            padding: var(--spacing-md);
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .cart-item-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .cart-item-remove {
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .cart-summary {
+            padding: var(--spacing-md);
+            background: var(--bg-light);
+        }
+        
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .cart-total-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .cart-actions {
+            padding: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .btn-checkout {
+            flex: 1;
+            background: var(--primary-color);
+            color: var(--bg-white);
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-light);
+        }
+        
+        @media (max-width: 768px) {
+            .cart-widget {
+                right: 10px;
+                top: 80px;
+                min-width: 150px;
+                padding: var(--spacing-sm);
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <a href="index.html">
+                            <span class="logo-text">SMALLSCALE</span>
+                            <span class="logo-tagline">Wholesale & Retail Foodstuffs</span>
+                        </a>
+                    </div>
+                    
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <span class="hamburger"></span>
+                    </button>
+                    
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="products.html" class="nav-link active">Products</a></li>
+                        <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                        <li><a href="about.html" class="nav-link">About Us</a></li>
+                        <li><a href="contact.html" class="nav-link">Contact</a></li>
+                        <li><a href="faq.html" class="nav-link">FAQs</a></li>
+                        <li><a href="login.html" class="nav-link">Login</a></li>
+                        <li><a href="quote.html" class="nav-link btn-quote">Get Quote</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Shopping Cart Widget -->
+    <div class="cart-widget" id="cartWidget" onclick="toggleCart()">
+        <div class="cart-header">
+            <span class="cart-icon">🛒</span>
+            <span>My Cart</span>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="cart-total">
+            Total: ₦<span id="cartTotal">0</span>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-modal-header">
+                <h2>Shopping Cart</h2>
+                <span class="cart-close" onclick="toggleCart()">×</span>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart">
+                    <p>🛒 Your cart is empty</p>
+                    <p style="font-size: 0.9rem; margin-top: 8px;">Add products to get started</p>
+                </div>
+            </div>
+            <div class="cart-summary" id="cartSummary" style="display: none;">
+                <div class="cart-summary-row">
+                    <span>Subtotal:</span>
+                    <span>₦<span id="cartSubtotal">0</span></span>
+                </div>
+                <div class="cart-summary-row">
+                    <span style="font-weight: 600; font-size: 1.2rem;">Total:</span>
+                    <span class="cart-total-amount">₦<span id="cartModalTotal">0</span></span>
+                </div>
+            </div>
+            <div class="cart-actions" id="cartActions" style="display: none;">
+                <button class="btn-checkout" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Page Content -->
+    <section class="products-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Our Products</h1>
+                <p class="section-subtitle">Premium foodstuffs for wholesale and retail purchases</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="search-box">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="search-input" 
+                           placeholder="Search products...">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Products</button>
+                    <button class="filter-btn" data-filter="grains">Grains & Cereals</button>
+                    <button class="filter-btn" data-filter="oils">Oils & Fats</button>
+                    <button class="filter-btn" data-filter="spices">Spices & Seasonings</button>
+                    <button class="filter-btn" data-filter="legumes">Legumes</button>
+                    <button class="filter-btn" data-filter="flour">Flour & Baking</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <!-- Product 1: Premium Rice -->
+                <div class="product-card" data-category="grains" data-id="1" data-name="Premium Rice" data-price="32000" data-unit="50kg bag">
+                    <div class="product-image">
+                        <div class="product-badge">Bestseller</div>
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-rice.jpg" alt="Premium Rice" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ERice%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Premium Rice</h3>
+                        <p class="product-description">High-quality long grain rice, perfect for all cooking needs</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦32,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (10+):</span>
+                                <span class="price-value bulk-price">₦28,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (50kg) | Bulk: 10+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="1">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(1)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2: Yellow Corn -->
+                <div class="product-card" data-category="grains" data-id="2" data-name="Yellow Corn" data-price="45000" data-unit="100kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-corn.jpg" alt="Yellow Corn" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ECorn%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Yellow Corn</h3>
+                        <p class="product-description">Fresh yellow corn for various culinary applications</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦45,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (5+):</span>
+                                <span class="price-value bulk-price">₦40,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (100kg) | Bulk: 5+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="2">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(2)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3: Vegetable Oil -->
+                <div class="product-card" data-category="oils" data-id="3" data-name="Vegetable Oil" data-price="18000" data-unit="25L container">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-oil.jpg" alt="Vegetable Oil" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'16\'%3EVegetable Oil%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Vegetable Oil</h3>
+                        <p class="product-description">Pure refined vegetable oil for cooking and frying</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦18,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (12+):</span>
+                                <span class="price-value bulk-price">₦16,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 container (25L) | Bulk: 12+ containers
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="3">
+                            <span class="quantity-unit">containers</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(3)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4: Palm Oil -->
+                <div class="product-card" data-category="oils" data-id="4" data-name="Palm Oil" data-price="16000" data-unit="20L container">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-palm-oil.jpg" alt="Palm Oil" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EPalm Oil%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Palm Oil</h3>
+                        <p class="product-description">Traditional red palm oil, rich and flavorful</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦16,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (12+):</span>
+                                <span class="price-value bulk-price">₦14,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 container (20L) | Bulk: 12+ containers
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="4">
+                            <span class="quantity-unit">containers</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(4)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5: Brown Beans -->
+                <div class="product-card" data-category="legumes" data-id="5" data-name="Brown Beans" data-price="45000" data-unit="100kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-beans.jpg" alt="Brown Beans" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EBeans%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Brown Beans</h3>
+                        <p class="product-description">Premium brown beans, protein-rich and nutritious</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦45,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (5+):</span>
+                                <span class="price-value bulk-price">₦40,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (100kg) | Bulk: 5+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="5">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(5)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6: Lentils -->
+                <div class="product-card" data-category="legumes" data-id="6" data-name="Lentils" data-price="35000" data-unit="50kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-lentils.jpg" alt="Lentils" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ELentils%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Lentils</h3>
+                        <p class="product-description">Quality lentils for soups and various dishes</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦35,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (8+):</span>
+                                <span class="price-value bulk-price">₦30,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (50kg) | Bulk: 8+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="6">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(6)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 7: Wheat Flour -->
+                <div class="product-card" data-category="flour" data-id="7" data-name="Wheat Flour" data-price="28000" data-unit="50kg bag">
+                    <div class="product-image">
+                        <div class="product-badge">New</div>
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-flour.jpg" alt="Wheat Flour" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EFlour%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Wheat Flour</h3>
+                        <p class="product-description">Fine milled wheat flour for baking and cooking</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦28,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (10+):</span>
+                                <span class="price-value bulk-price">₦24,500</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (50kg) | Bulk: 10+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="7">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(7)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 8: Semolina -->
+                <div class="product-card" data-category="flour" data-id="8" data-name="Semolina" data-price="30000" data-unit="25kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-semolina.jpg" alt="Semolina" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'16\'%3ESemolina%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Semolina</h3>
+                        <p class="product-description">Premium semolina for swallow and porridge</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦30,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (15+):</span>
+                                <span class="price-value bulk-price">₦26,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (25kg) | Bulk: 15+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="8">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(8)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 9: Ground Pepper -->
+                <div class="product-card" data-category="spices" data-id="9" data-name="Ground Pepper" data-price="8500" data-unit="10kg pack">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-pepper.jpg" alt="Ground Pepper" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EPepper%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Ground Pepper</h3>
+                        <p class="product-description">Freshly ground pepper for seasoning</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦8,500</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (20+):</span>
+                                <span class="price-value bulk-price">₦7,500</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 pack (10kg) | Bulk: 20+ packs
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="9">
+                            <span class="quantity-unit">packs</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(9)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 10: Curry Powder -->
+                <div class="product-card" data-category="spices" data-id="10" data-name="Curry Powder" data-price="6500" data-unit="5kg pack">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-curry.jpg" alt="Curry Powder" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ECurry%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Curry Powder</h3>
+                        <p class="product-description">Aromatic curry powder blend</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦6,500</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (20+):</span>
+                                <span class="price-value bulk-price">₦5,500</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 pack (5kg) | Bulk: 20+ packs
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="10">
+                            <span class="quantity-unit">packs</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(10)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 11: Garri (Yellow/White) -->
+                <div class="product-card" data-category="grains" data-id="11" data-name="Garri (Yellow/White)" data-price="22000" data-unit="50kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-garri.jpg" alt="Garri" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3EGarri%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Garri (Yellow/White)</h3>
+                        <p class="product-description">Premium quality garri for eba and soaking</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦22,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (10+):</span>
+                                <span class="price-value bulk-price">₦19,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (50kg) | Bulk: 10+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="11">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(11)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 12: Refined Salt -->
+                <div class="product-card" data-category="spices" data-id="12" data-name="Refined Salt" data-price="12000" data-unit="25kg bag">
+                    <div class="product-image">
+                        <div class="wholesale-badge">Wholesale</div>
+                        <img src="assets/images/product-salt.jpg" alt="Refined Salt" onerror="this.src='data:image/svg+xml,%3Csvg width=\'300\' height=\'300\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'300\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'18\'%3ESalt%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Refined Salt</h3>
+                        <p class="product-description">Iodized refined salt for cooking</p>
+                        
+                        <div class="product-pricing">
+                            <div class="price-row">
+                                <span class="price-label">Retail Price:</span>
+                                <span class="price-value">₦12,000</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Bulk (15+):</span>
+                                <span class="price-value bulk-price">₦10,500</span>
+                            </div>
+                        </div>
+                        
+                        <div class="min-order-info">
+                            📦 Min. Order: 1 bag (25kg) | Bulk: 15+ bags
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Qty:</span>
+                            <input type="number" class="quantity-input" value="1" min="1" data-product-id="12">
+                            <span class="quantity-unit">bags</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart(12)">Add to Cart</button>
+                            <a href="quote.html" class="btn-quote">Request Quote</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <h3>Need Help Choosing?</h3>
+                <p>Contact our team for personalized product recommendations</p>
+                <div class="help-buttons">
+                    <a href="quote.html" class="btn btn-primary">Request a Quote</a>
+                    <a href="contact.html" class="btn btn-outline">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>About SmallScale</h3>
+                    <p>Your trusted wholesale and retail foodstuffs supplier in Nigeria. We provide premium quality products at competitive prices with reliable delivery nationwide.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="login.html">Customer Login</a></li>
+                        <li><a href="quote.html">Get Quote</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Product Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=grains">Grains & Cereals</a></li>
+                        <li><a href="products.html?category=oils">Oils & Fats</a></li>
+                        <li><a href="products.html?category=spices">Spices & Seasonings</a></li>
+                        <li><a href="products.html?category=legumes">Legumes</a></li>
+                        <li><a href="products.html?category=flour">Flour & Baking</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>📧 damseljummy853@gmail.com</li>
+                        <li>📞 +234 704 609 9135</li>
+                        <li>📱 WhatsApp: +234 704 609 9135</li>
+                        <li>📍 Lagos, Nigeria</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 SmallScale Wholesale & Retail Foodstuffs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Shopping Cart Functionality
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        
+        // Product data
+        const products = {
+            1: { name: 'Premium Rice', price: 32000, unit: '50kg bag' },
+            2: { name: 'Yellow Corn', price: 45000, unit: '100kg bag' },
+            3: { name: 'Vegetable Oil', price: 18000, unit: '25L container' },
+            4: { name: 'Palm Oil', price: 16000, unit: '20L container' },
+            5: { name: 'Brown Beans', price: 45000, unit: '100kg bag' },
+            6: { name: 'Lentils', price: 35000, unit: '50kg bag' },
+            7: { name: 'Wheat Flour', price: 28000, unit: '50kg bag' },
+            8: { name: 'Semolina', price: 30000, unit: '25kg bag' },
+            9: { name: 'Ground Pepper', price: 8500, unit: '10kg pack' },
+            10: { name: 'Curry Powder', price: 6500, unit: '5kg pack' },
+            11: { name: 'Garri (Yellow/White)', price: 22000, unit: '50kg bag' },
+            12: { name: 'Refined Salt', price: 12000, unit: '25kg bag' }
+        };
+        
+        function addToCart(productId) {
+            const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+            const quantity = parseInt(quantityInput.value) || 1;
+            
+            const product = products[productId];
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    unit: product.unit,
+                    quantity: quantity
+                });
+            }
+            
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            updateCart();
+            
+            // Show feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            const originalBg = getComputedStyle(btn).background;
+            btn.textContent = '✓ Added!';
+            btn.style.background = 'var(--success-hover)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 1500);
+        }
+        
+        function updateCart() {
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = totalAmount.toLocaleString();
+            
+            renderCart();
+        }
+        
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('active');
+        }
+        
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartSummary = document.getElementById('cartSummary');
+            const cartActions = document.getElementById('cartActions');
+            const cartModalTotal = document.getElementById('cartModalTotal');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <p>🛒 Your cart is empty</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">Add products to get started</p>
+                    </div>
+                `;
+                cartSummary.style.display = 'none';
+                cartActions.style.display = 'none';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-light); margin: 4px 0;">
+                                ${item.quantity} × ₦${item.price.toLocaleString()} (${item.unit})
+                            </div>
+                            <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+                            <div class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartSubtotal.textContent = total.toLocaleString();
+                cartModalTotal.textContent = total.toLocaleString();
+                
+                cartSummary.style.display = 'block';
+                cartActions.style.display = 'flex';
+            }
+        }
+        
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            updateCart();
+        }
+        
+        function proceedToCheckout() {
+            if (cart.length > 0) {
+                // Calculate totals once
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                
+                // Save cart info for checkout page
+                sessionStorage.setItem('checkoutCart', JSON.stringify(cart));
+                sessionStorage.setItem('checkoutTotal', totalAmount);
+                
+                // Redirect to quote form
+                window.location.href = 'quote.html';
+            }
+        }
+        
+        // Initialize cart on page load
+        updateCart();
+        
+        // Filter and search functionality (existing code from main.js will handle this)
+    </script>
+</body>
+</html>
