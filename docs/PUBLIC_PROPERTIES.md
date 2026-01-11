@@ -46,12 +46,21 @@ Each property card displays:
 - **"APPLY" button** - Links directly to application form (requires login if not authenticated)
 - **"SCHEDULE TOUR" button** - Opens tour scheduling dialog (no login required)
 
-### 5. Direct Application Flow
+### 5. Direct Application Flow with Account Creation
 - Each property has two action buttons:
-  1. **APPLY** button - Redirects to `/apply/{propertyId}` for rental application
+  1. **APPLY** button - Initiates the rental application process
   2. **SCHEDULE TOUR** button - Opens dialog to schedule property tour
-- Property ID is automatically passed to the application form
-- Seamless tenant onboarding experience
+- **New User Flow**:
+  1. User clicks "APPLY" on a property
+  2. System stores the intended application URL (`/apply/{propertyId}`)
+  3. User is directed to application form
+  4. If not logged in, user can click "Login" or "Create Account"
+  5. After successful login or registration, user is automatically redirected back to the application form
+  6. Property ID is preserved throughout the entire flow
+- **Existing User Flow**:
+  1. User clicks "APPLY" on a property
+  2. User is directed directly to application form with property ID
+- Seamless tenant onboarding experience with automatic redirect
 
 ### 6. Tour Scheduling Feature
 - **No login required** to schedule a tour
@@ -262,10 +271,16 @@ Each property card displays:
 4. **Taking Action on Property**
    - User has two options for each property:
    
-   **Option A: Apply**
+   **Option A: Apply for Property**
    - Click "APPLY" button
    - Redirected to `/apply/{propertyId}`
-   - Application form opens with property pre-selected
+   - If not logged in:
+     - Application form shows login/register options
+     - User can click "Create Account" to register
+     - After successful login or registration, automatically redirected back to application form
+     - Property ID is preserved throughout the flow
+   - If already logged in:
+     - Goes directly to application form with property pre-selected
    - User completes application (see PUBLIC_APPLICATION_FORM.md)
    
    **Option B: Schedule Tour**
@@ -275,6 +290,29 @@ Each property card displays:
    - Submits tour request (no login required)
    - Receives confirmation message
    - Property manager will contact to confirm
+
+5. **Account Creation Flow** (New Users)
+   - User clicks "APPLY" on property listing
+   - System stores redirect URL (`/apply/{propertyId}`)
+   - User clicks "Create Account" on application form or login page
+   - Fills registration form:
+     - First Name, Last Name
+     - Email, Phone
+     - Account Type (Tenant, Landlord, Agent)
+     - Password
+   - After successful registration:
+     - Automatically logged in
+     - Redirected to the original application form
+     - Can immediately complete rental application
+
+6. **Login Flow** (Existing Users)
+   - User clicks "APPLY" on property listing
+   - System stores redirect URL (`/apply/{propertyId}`)
+   - User clicks "Sign In" on application form or goes to login page
+   - Enters credentials
+   - After successful login:
+     - Automatically redirected to the original application form
+     - Can immediately complete rental application
 
 ## Sharing Strategies
 

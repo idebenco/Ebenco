@@ -95,6 +95,8 @@ const PublicPropertiesPage: React.FC = () => {
   };
 
   const handleApply = (propertyId: string) => {
+    // Store the intended destination for after login
+    localStorage.setItem('redirectAfterLogin', `/apply/${propertyId}`);
     navigate(`/apply/${propertyId}`);
   };
 

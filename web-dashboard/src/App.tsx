@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import UsersPage from './pages/UsersPage';
 import PropertiesPage from './pages/PropertiesPage';
@@ -42,6 +43,7 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/properties" element={<PublicPropertiesPage />} />
             <Route path="/apply/:propertyId" element={<PublicApplicationForm />} />
             <Route path="/apply" element={<PublicApplicationForm />} />

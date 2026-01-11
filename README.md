@@ -14,7 +14,10 @@ This system consists of three main components:
 ### Public Access (No Login Required)
 - **Browse Available Properties** - View all available rental properties at `/properties`
 - **Advanced Property Search** - Filter by location, price, bedrooms, bathrooms
-- **Apply Without Registration** - Submit rental applications via shareable link
+- **Schedule Property Tours** - Request tours without creating an account
+- **Create Account** - New users can register at `/register` as Tenant, Landlord, or Agent
+- **Apply for Properties** - Click "APPLY" on any property to start the application process
+- **Automatic Redirect After Login** - After creating account or logging in, automatically redirected back to the application form
 - Beautiful, responsive interface with purple gradient design
 
 ### For Tenants (Mobile App)

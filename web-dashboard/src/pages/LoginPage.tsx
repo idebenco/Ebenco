@@ -7,9 +7,10 @@ import {
   Typography,
   Box,
   Alert,
+  Link,
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -33,7 +34,14 @@ const LoginPage: React.FC = () => {
     setLoading(false);
 
     if (result.success) {
-      navigate('/');
+      // Check if there's a redirect URL stored (e.g., from clicking APPLY button)
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        navigate(redirectUrl);
+      } else {
+        navigate('/');
+      }
     } else {
       setError(result.error || 'Login failed');
     }
@@ -98,6 +106,15 @@ const LoginPage: React.FC = () => {
             >
               {loading ? 'Logging in...' : 'Sign In'}
             </Button>
+
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Don't have an account?{' '}
+                <Link component={RouterLink} to="/register">
+                  Create one here
+                </Link>
+              </Typography>
+            </Box>
           </Box>
         </Paper>
       </Box>
