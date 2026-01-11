@@ -10,6 +10,7 @@ import PropertiesPage from './pages/PropertiesPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import PaymentsPage from './pages/PaymentsPage';
 import PublicApplicationForm from './pages/PublicApplicationForm';
+import PublicPropertiesPage from './pages/PublicPropertiesPage';
 
 const theme = createTheme({
   palette: {
@@ -41,6 +42,7 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/properties" element={<PublicPropertiesPage />} />
             <Route path="/apply/:propertyId" element={<PublicApplicationForm />} />
             <Route path="/apply" element={<PublicApplicationForm />} />
             

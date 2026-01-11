@@ -1,6 +1,82 @@
 # System Preview - Rental Property Management
 
-This document provides a visual preview of the complete rental property management system.
+This document provides a visual preview of the complete rental property management system, including public access pages.
+
+## 🌐 Public Web Pages (No Login Required)
+
+### Public Properties Listing Page
+
+**URL**: `http://localhost:3000/properties`
+
+This page is accessible to anyone without requiring login or registration, allowing prospective tenants to browse available properties.
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║                   Beautiful Gradient Background                ║
+║              (Purple to Violet: #667eea → #764ba2)            ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║                         🏠 (Large Icon)                        ║
+║                                                                 ║
+║                    Available Properties                        ║
+║                  Find your perfect rental home                 ║
+║                                                                 ║
+║   ┌─────────────────────────────────────────────────────┐    ║
+║   │                 Search & Filters                     │    ║
+║   ├─────────────────────────────────────────────────────┤    ║
+║   │  🔍 Search    📍 City    State    🛏️ Beds   🚿 Baths │    ║
+║   │                                                       │    ║
+║   │  $ Min Price          $ Max Price                    │    ║
+║   │                                                       │    ║
+║   │        [        Search Properties        ]           │    ║
+║   └─────────────────────────────────────────────────────┘    ║
+║                                                                 ║
+║   12 Properties Available                                      ║
+║                                                                 ║
+║   ┌───────────┐  ┌───────────┐  ┌───────────┐                ║
+║   │ [Image]   │  │ [Image]   │  │ [Image]   │                ║
+║   │           │  │           │  │           │                ║
+║   │ 2BR Apt   │  │ Studio    │  │ 3BR Condo │                ║
+║   │ NYC, NY   │  │ LA, CA    │  │ Miami, FL │                ║
+║   │ Modern... │  │ Cozy...   │  │ Luxury... │                ║
+║   │ 🛏️ 2  🚿 1 │  │ 🛏️ 1  🚿 1 │  │ 🛏️ 3  🚿 2 │                ║
+║   │           │  │           │  │           │                ║
+║   │ $1500/mo  │  │ $1200/mo  │  │ $2500/mo  │                ║
+║   │[Apply Now]│  │[Apply Now]│  │[Apply Now]│                ║
+║   └───────────┘  └───────────┘  └───────────┘                ║
+║                                                                 ║
+║   ┌───────────┐  ┌───────────┐  ┌───────────┐                ║
+║   │ [Image]   │  │ [Image]   │  │ [Image]   │                ║
+║   │           │  │           │  │           │                ║
+║   │ 1BR Apt   │  │ 2BR House │  │ Studio    │                ║
+║   │ SF, CA    │  │ Austin,TX │  │ Boston,MA │                ║
+║   │ Bright... │  │ Spacious..│  │ Modern... │                ║
+║   │ 🛏️ 1  🚿 1 │  │ 🛏️ 2  🚿 2 │  │ 🛏️ 1  🚿 1 │                ║
+║   │           │  │           │  │           │                ║
+║   │ $1800/mo  │  │ $1600/mo  │  │ $1400/mo  │                ║
+║   │[Apply Now]│  │[Apply Now]│  │[Apply Now]│                ║
+║   └───────────┘  └───────────┘  └───────────┘                ║
+║                                                                 ║
+║        Questions? Contact us at support@rental...             ║
+║                                                                 ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+**Key Features**:
+- ✅ No login required - accessible to everyone
+- ✅ Beautiful purple gradient background matching application form
+- ✅ Advanced search filters (location, price, beds, baths)
+- ✅ Card-based property layout with hover effects
+- ✅ Direct "Apply Now" button linking to application form
+- ✅ Responsive design (works on mobile and desktop)
+- ✅ Real-time search with all available properties
+- ✅ Shows only properties with status "available"
+
+**User Flow**:
+1. User visits `/properties` (no login needed)
+2. Browses available properties with filters
+3. Clicks "Apply Now" on desired property
+4. Redirected to `/apply/{propertyId}` with pre-filled property info
 
 ## 📱 Mobile Application Preview
 

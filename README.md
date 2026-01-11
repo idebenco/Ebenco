@@ -11,6 +11,12 @@ This system consists of three main components:
 
 ## Features
 
+### Public Access (No Login Required)
+- **Browse Available Properties** - View all available rental properties at `/properties`
+- **Advanced Property Search** - Filter by location, price, bedrooms, bathrooms
+- **Apply Without Registration** - Submit rental applications via shareable link
+- Beautiful, responsive interface with purple gradient design
+
 ### For Tenants (Mobile App)
 - Browse available rental properties
 - View detailed property information with photos
@@ -93,6 +99,12 @@ npm start
 - [Mobile App Documentation](mobile-app/README.md)
 - [Web Dashboard Documentation](web-dashboard/README.md)
 - [Architecture Details](docs/ARCHITECTURE.md)
+- [Public Properties Page](docs/PUBLIC_PROPERTIES.md) - Browse properties without login
+- [Public Application Form](docs/PUBLIC_APPLICATION_FORM.md) - Apply without registration
+- [Security Configuration](docs/SECURITY.md) - Firewall and security setup
+- [System Preview](docs/PREVIEW.md) - Visual preview of all pages
+- [Quick Start Guide](docs/QUICKSTART.md) - Get running in 3 commands
+- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment
 
 ## Project Structure
 
