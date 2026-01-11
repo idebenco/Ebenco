@@ -5,6 +5,22 @@ const { auth } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
+// Public application submission (no auth required)
+router.post('/public',
+  [
+    body('propertyId').notEmpty(),
+    body('applicantInfo.firstName').notEmpty().trim(),
+    body('applicantInfo.lastName').notEmpty().trim(),
+    body('applicantInfo.email').isEmail().trim(),
+    body('applicantInfo.phone').notEmpty().trim(),
+    body('employmentInfo.employer').notEmpty().trim(),
+    body('employmentInfo.position').notEmpty().trim(),
+    body('employmentInfo.income').isNumeric().isFloat({ min: 0 }),
+    body('moveInDate').isISO8601()
+  ],
+  applicationController.createPublicApplication
+);
+
 // Get all applications (filtered by role)
 router.get('/', auth, applicationController.getApplications);
 

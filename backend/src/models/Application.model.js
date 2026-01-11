@@ -9,7 +9,18 @@ const applicationSchema = new mongoose.Schema({
   tenantId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: false  // Not required for public applications
+  },
+  // For public applications (no user account)
+  isPublic: {
+    type: Boolean,
+    default: false
+  },
+  applicantInfo: {
+    firstName: String,
+    lastName: String,
+    email: String,
+    phone: String
   },
   status: {
     type: String,
@@ -68,6 +79,7 @@ const applicationSchema = new mongoose.Schema({
     required: true
   },
   notes: String,
+  additionalNotes: String,
   rejectionReason: String
 }, {
   timestamps: true

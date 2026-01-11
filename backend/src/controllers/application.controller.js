@@ -163,3 +163,48 @@ exports.updateApplicationStatus = async (req, res) => {
     res.status(500).json({ error: { message: 'Failed to update application' } });
   }
 };
+
+exports.createPublicApplication = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // Check if property exists and is available
+    const property = await Property.findById(req.body.propertyId);
+    if (!property) {
+      return res.status(404).json({ error: { message: 'Property not found' } });
+    }
+
+    if (property.status !== 'available') {
+      return res.status(400).json({ error: { message: 'Property is not available' } });
+    }
+
+    // Create application without authentication
+    const application = new Application({
+      propertyId: req.body.propertyId,
+      applicantInfo: req.body.applicantInfo,
+      employmentInfo: req.body.employmentInfo,
+      references: req.body.references || [],
+      moveInDate: req.body.moveInDate,
+      additionalNotes: req.body.additionalNotes,
+      status: 'pending',
+      isPublic: true
+    });
+
+    await application.save();
+
+    res.status(201).json({
+      message: 'Application submitted successfully',
+      application: {
+        _id: application._id,
+        status: application.status,
+        createdAt: application.createdAt
+      }
+    });
+  } catch (error) {
+    console.error('Create public application error:', error);
+    res.status(500).json({ error: { message: 'Failed to submit application' } });
+  }
+};

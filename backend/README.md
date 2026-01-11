@@ -252,6 +252,56 @@ Delete a property (landlord/agent/admin only).
 
 ## Application Endpoints
 
+### Submit Public Application (No Auth Required) ✨
+**POST** `/applications/public`
+
+Submit a rental application without authentication. Perfect for sharing a direct link with potential tenants.
+
+**No Authentication Required** - This endpoint is public
+
+**Request Body:**
+```json
+{
+  "propertyId": "property_id",
+  "applicantInfo": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890"
+  },
+  "employmentInfo": {
+    "employer": "Company Inc",
+    "position": "Software Engineer",
+    "income": 75000,
+    "startDate": "2020-01-01"
+  },
+  "references": [
+    {
+      "name": "Jane Manager",
+      "phone": "+0987654321",
+      "email": "jane@company.com",
+      "relationship": "employer"
+    }
+  ],
+  "moveInDate": "2024-02-01",
+  "additionalNotes": "I have a well-behaved pet cat"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Application submitted successfully",
+  "application": {
+    "_id": "application_id",
+    "status": "pending",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+**Access via Web:** `https://yourdomain.com/apply/{propertyId}`
+
 ### List Applications
 **GET** `/applications`
 
