@@ -2,6 +2,8 @@
 
 This guide covers deploying all three components of the rental property management system to production.
 
+> **Security Note**: For comprehensive firewall rules, CORS configuration, and security best practices, see [SECURITY.md](SECURITY.md).
+
 ## Overview
 
 - **Backend**: Node.js/Express API
@@ -14,6 +16,7 @@ This guide covers deploying all three components of the rental property manageme
 - SSL certificates
 - Cloud accounts (AWS, MongoDB Atlas, etc.)
 - App Store and Google Play developer accounts (for mobile)
+- Review [SECURITY.md](SECURITY.md) for firewall and network security configuration
 
 ---
 
@@ -39,6 +42,7 @@ heroku config:set MONGODB_URI=mongodb+srv://...
 heroku config:set JWT_SECRET=your-production-secret
 heroku config:set NODE_ENV=production
 heroku config:set STRIPE_SECRET_KEY=sk_live_...
+heroku config:set CORS_ORIGIN=https://yourdomain.com,https://admin.yourdomain.com
 ```
 
 4. **Deploy**
@@ -46,12 +50,17 @@ heroku config:set STRIPE_SECRET_KEY=sk_live_...
 git push heroku main
 ```
 
+5. **Test Connectivity**
+```bash
+npm run test:connectivity
+```
+
 ### Option 2: AWS EC2
 
 1. **Launch EC2 Instance**
    - Ubuntu 20.04 LTS
    - t2.micro or larger
-   - Configure security group (ports 22, 80, 443, 5000)
+   - **Configure security group** - See [SECURITY.md](SECURITY.md#firewall-rules) for detailed rules
 
 2. **Connect and Setup**
 ```bash

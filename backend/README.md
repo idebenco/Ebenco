@@ -5,6 +5,38 @@
 http://localhost:5000/api
 ```
 
+## Quick Links
+
+- [API Endpoints](#authentication-endpoints) - Complete API reference
+- [TESTING.md](TESTING.md) - Network connectivity and security testing
+- [../docs/SECURITY.md](../docs/SECURITY.md) - Firewall rules and security configuration
+- [../docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) - Production deployment guide
+
+## Security & Testing
+
+### Test Connectivity
+```bash
+npm run test:connectivity
+```
+
+This runs comprehensive tests on:
+- Backend health and availability
+- CORS configuration
+- API endpoint accessibility
+- DNS resolution
+- SSL/TLS certificates
+- Rate limiting
+- Security headers
+
+See [TESTING.md](TESTING.md) for details.
+
+### Security Configuration
+
+For production deployment, review:
+- **Firewall Rules**: [SECURITY.md](../docs/SECURITY.md#firewall-rules)
+- **CORS Configuration**: [SECURITY.md](../docs/SECURITY.md#cors-configuration)
+- **SSL/TLS Setup**: [SECURITY.md](../docs/SECURITY.md#ssltls-configuration)
+
 ## Authentication
 All authenticated endpoints require a JWT token in the Authorization header:
 ```

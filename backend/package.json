@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:connectivity": "node test-connectivity.js",
+    "test:security": "node test-connectivity.js"
   },
   "keywords": [],
   "author": "",
