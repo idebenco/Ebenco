@@ -15,6 +15,8 @@ import {
   InputAdornment,
   Divider,
   Chip,
+  Card,
+  CardContent,
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -22,6 +24,8 @@ import {
   Person as PersonIcon,
   Description as DescriptionIcon,
   CheckCircle as CheckCircleIcon,
+  CloudUpload as CloudUploadIcon,
+  AttachFile as AttachFileIcon,
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -47,6 +51,7 @@ const PublicApplicationForm: React.FC = () => {
     lastName: '',
     email: '',
     phone: '',
+    ssn: '',
     // Employment Info
     employer: '',
     position: '',
@@ -60,6 +65,17 @@ const PublicApplicationForm: React.FC = () => {
     // Additional Info
     moveInDate: '',
     additionalNotes: '',
+  });
+
+  // File uploads
+  const [files, setFiles] = useState({
+    driverLicenseFront: null as File | null,
+    driverLicenseBack: null as File | null,
+  });
+
+  const [fileNames, setFileNames] = useState({
+    driverLicenseFront: '',
+    driverLicenseBack: '',
   });
 
   useEffect(() => {
@@ -89,6 +105,28 @@ const PublicApplicationForm: React.FC = () => {
     setFormData({ ...formData, references: newReferences });
   };
 
+  const handleFileChange = (field: 'driverLicenseFront' | 'driverLicenseBack') => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('File must be JPG, PNG, or PDF');
+        return;
+      }
+      setFiles({ ...files, [field]: file });
+      setFileNames({ ...fileNames, [field]: file.name });
+      setError('');
+    }
+  };
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -102,13 +140,35 @@ const PublicApplicationForm: React.FC = () => {
     setError('');
 
     try {
-      const payload = {
+      // Validate required documents
+      if (!files.driverLicenseFront || !files.driverLicenseBack) {
+        setError('Please upload both front and back of your driver\'s license');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.ssn || formData.ssn.length < 9) {
+        setError('Please enter a valid SSN');
+        setLoading(false);
+        return;
+      }
+
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add files
+      formDataToSend.append('driverLicenseFront', files.driverLicenseFront);
+      formDataToSend.append('driverLicenseBack', files.driverLicenseBack);
+      
+      // Add application data as JSON
+      const applicationData = {
         propertyId,
         applicantInfo: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
+          ssn: formData.ssn,
         },
         employmentInfo: {
           employer: formData.employer,
@@ -120,8 +180,14 @@ const PublicApplicationForm: React.FC = () => {
         moveInDate: formData.moveInDate,
         additionalNotes: formData.additionalNotes,
       };
+      
+      formDataToSend.append('applicationData', JSON.stringify(applicationData));
 
-      await axios.post(`${API_URL}/applications/public`, payload);
+      await axios.post(`${API_URL}/applications/public`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setSuccess(true);
     } catch (err: any) {
       setError(err.response?.data?.error?.message || 'Failed to submit application');
@@ -180,6 +246,102 @@ const PublicApplicationForm: React.FC = () => {
           value={formData.phone}
           onChange={handleChange('phone')}
         />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          required
+          fullWidth
+          label="Social Security Number (SSN)"
+          value={formData.ssn}
+          onChange={handleChange('ssn')}
+          placeholder="XXX-XX-XXXX"
+          helperText="Your SSN is encrypted and securely stored"
+          inputProps={{ maxLength: 11 }}
+        />
+      </Grid>
+      
+      <Grid item xs={12}>
+        <Divider sx={{ my: 2 }}>
+          <Chip label="Document Uploads" icon={<AttachFileIcon />} />
+        </Divider>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+          <CardContent>
+            <Typography variant="subtitle2" gutterBottom>
+              Driver's License (Front) *
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Upload a clear photo of the front of your driver's license
+            </Typography>
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {fileNames.driverLicenseFront ? 'Change File' : 'Upload Front'}
+              <input
+                type="file"
+                hidden
+                accept="image/jpeg,image/jpg,image/png,application/pdf"
+                onChange={handleFileChange('driverLicenseFront')}
+              />
+            </Button>
+            {fileNames.driverLicenseFront && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2" noWrap>
+                  {fileNames.driverLicenseFront}
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+          <CardContent>
+            <Typography variant="subtitle2" gutterBottom>
+              Driver's License (Back) *
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Upload a clear photo of the back of your driver's license
+            </Typography>
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {fileNames.driverLicenseBack ? 'Change File' : 'Upload Back'}
+              <input
+                type="file"
+                hidden
+                accept="image/jpeg,image/jpg,image/png,application/pdf"
+                onChange={handleFileChange('driverLicenseBack')}
+              />
+            </Button>
+            {fileNames.driverLicenseBack && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2" noWrap>
+                  {fileNames.driverLicenseBack}
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Alert severity="info">
+          <Typography variant="body2">
+            <strong>Accepted formats:</strong> JPG, PNG, or PDF (max 5MB per file)
+          </Typography>
+        </Alert>
       </Grid>
     </Grid>
   );
@@ -365,6 +527,28 @@ const PublicApplicationForm: React.FC = () => {
           <Typography><strong>Name:</strong> {formData.firstName} {formData.lastName}</Typography>
           <Typography><strong>Email:</strong> {formData.email}</Typography>
           <Typography><strong>Phone:</strong> {formData.phone}</Typography>
+          <Typography><strong>SSN:</strong> ***-**-{formData.ssn.slice(-4)}</Typography>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>Documents Uploaded:</Typography>
+            {fileNames.driverLicenseFront && (
+              <Chip 
+                label={`Driver's License (Front): ${fileNames.driverLicenseFront}`} 
+                color="success" 
+                size="small" 
+                sx={{ mr: 1, mb: 1 }}
+                icon={<AttachFileIcon />}
+              />
+            )}
+            {fileNames.driverLicenseBack && (
+              <Chip 
+                label={`Driver's License (Back): ${fileNames.driverLicenseBack}`} 
+                color="success" 
+                size="small" 
+                sx={{ mb: 1 }}
+                icon={<AttachFileIcon />}
+              />
+            )}
+          </Box>
         </Box>
       </Grid>
 

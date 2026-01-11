@@ -20,7 +20,8 @@ const applicationSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    phone: String
+    phone: String,
+    ssn: String  // Encrypted SSN
   },
   status: {
     type: String,
@@ -30,7 +31,7 @@ const applicationSchema = new mongoose.Schema({
   documents: [{
     type: {
       type: String,
-      enum: ['id', 'income_proof', 'credit_report', 'other'],
+      enum: ['id', 'income_proof', 'credit_report', 'driver_license_front', 'driver_license_back', 'other'],
       required: true
     },
     url: {

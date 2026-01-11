@@ -15,6 +15,8 @@ The form can be accessed via:
 ✅ **No Login Required** - Anyone can access the form with just a link
 ✅ **Beautiful Gradient Background** - Purple gradient (linear-gradient(135deg, #667eea 0%, #764ba2 100%))
 ✅ **4-Step Wizard** - Guided application process
+✅ **Document Upload** - Driver's license (front & back) and SSN collection
+✅ **Secure File Handling** - Files encrypted and securely stored (max 5MB per file)
 ✅ **Responsive Design** - Works on all devices
 ✅ **Form Validation** - Built-in validation for all fields
 ✅ **Success Confirmation** - Clear success message after submission
@@ -54,6 +56,28 @@ The form can be accessed via:
 │  │  │ john@example.com     │   │ +1 (555) 123-4567   │    │    │
 │  │  └──────────────────────┘   └──────────────────────┘    │    │
 │  │                                                             │    │
+│  │  Social Security Number (SSN)                              │    │
+│  │  ┌──────────────────────────────────────────────────┐    │    │
+│  │  │ XXX-XX-XXXX                                      │    │    │
+│  │  │ 🔒 Your SSN is encrypted and securely stored      │    │    │
+│  │  └──────────────────────────────────────────────────┘    │    │
+│  │                                                             │    │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━ Document Uploads ━━━━━━━━━━━━━  │    │
+│  │                                                             │    │
+│  │  ┌────────────────────────┐  ┌────────────────────────┐  │    │
+│  │  │ Driver's License       │  │ Driver's License       │  │    │
+│  │  │ (Front) *              │  │ (Back) *               │  │    │
+│  │  │                        │  │                        │  │    │
+│  │  │ Upload a clear photo   │  │ Upload a clear photo   │  │    │
+│  │  │ of the front of your   │  │ of the back of your    │  │    │
+│  │  │ driver's license       │  │ driver's license       │  │    │
+│  │  │                        │  │                        │  │    │
+│  │  │ [☁️ Upload Front]      │  │ [☁️ Upload Back]       │  │    │
+│  │  │                        │  │                        │  │    │
+│  │  │ ✅ license-front.jpg   │  │ ✅ license-back.jpg    │  │    │
+│  │  └────────────────────────┘  └────────────────────────┘  │    │
+│  │                                                             │    │
+│  │  ℹ️ Accepted formats: JPG, PNG, or PDF (max 5MB/file)     │    │
 │  │                                                             │    │
 │  │  [Back]                                    [Next ➜]        │    │
 │  └────────────────────────────────────────────────────────────┘    │
@@ -250,10 +274,19 @@ The form can be accessed via:
    - Error handling and display
 
 4. **Data Collected**
-   - Personal: First name, last name, email, phone
+   - Personal: First name, last name, email, phone, SSN (encrypted)
+   - Documents: Driver's license (front & back) - JPG, PNG, or PDF
    - Employment: Employer, position, income, start date
    - References: Name, phone, email, relationship (up to 2)
    - Additional: Move-in date, notes
+
+5. **Security Features**
+   - SSN encryption and secure storage
+   - File upload validation (type and size)
+   - Secure file storage with unique naming
+   - Maximum file size: 5MB per file
+   - Accepted formats: JPG, PNG, PDF
+   - Files stored outside public directory
 
 ## Sharing the Link
 
@@ -288,15 +321,45 @@ https://rental-management.com/apply
 ## Security Considerations
 
 - ✅ Input validation on both frontend and backend
+- ✅ File upload validation (type, size, content)
+- ✅ SSN encryption and secure storage
+- ✅ Secure file storage with unique naming
+- ✅ Files stored outside public web directory
 - ✅ Rate limiting to prevent spam (recommended)
 - ✅ Email verification (optional enhancement)
 - ✅ CAPTCHA integration (optional enhancement)
 - ✅ Data encryption in transit (HTTPS)
 - ✅ Sanitized inputs to prevent injection attacks
+- ✅ Max file size enforcement (5MB per file)
+
+## Backend File Upload Implementation
+
+The backend uses **Multer** for secure file handling:
+
+```javascript
+// File upload configuration
+- Storage: Local disk with unique filenames
+- Location: uploads/applications/
+- Naming: fieldname-timestamp-random.ext
+- Validation: File type and size checks
+- Max size: 5MB per file
+- Allowed types: JPG, PNG, PDF
+```
+
+**API Endpoint**:
+```
+POST /api/applications/public
+Content-Type: multipart/form-data
+
+Fields:
+- applicationData: JSON string with applicant info
+- driverLicenseFront: File upload
+- driverLicenseBack: File upload
+```
 
 ## Future Enhancements
 
-- [ ] Document upload capability
+- [x] Document upload capability (COMPLETED)
 - [ ] Email verification link
 - [ ] CAPTCHA for spam prevention
 - [ ] Application status tracking via email link
@@ -304,3 +367,5 @@ https://rental-management.com/apply
 - [ ] Save progress and resume later
 - [ ] PDF generation of application
 - [ ] SMS notifications
+- [ ] OCR for automatic ID verification
+- [ ] Facial recognition for ID matching

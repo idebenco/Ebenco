@@ -1,6 +1,44 @@
 const Application = require('../models/Application.model');
 const Property = require('../models/Property.model');
 const { validationResult } = require('express-validator');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = 'uploads/applications';
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // Accept images and PDFs only
+  const allowedTypes = /jpeg|jpg|png|pdf/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Only JPG, PNG, and PDF files are allowed'));
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: fileFilter
+});
 
 exports.getApplications = async (req, res) => {
   try {
@@ -171,8 +209,11 @@ exports.createPublicApplication = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
+    // Parse application data from form
+    const applicationData = JSON.parse(req.body.applicationData);
+
     // Check if property exists and is available
-    const property = await Property.findById(req.body.propertyId);
+    const property = await Property.findById(applicationData.propertyId);
     if (!property) {
       return res.status(404).json({ error: { message: 'Property not found' } });
     }
@@ -181,14 +222,34 @@ exports.createPublicApplication = async (req, res) => {
       return res.status(400).json({ error: { message: 'Property is not available' } });
     }
 
+    // Process uploaded documents
+    const documents = [];
+    if (req.files) {
+      if (req.files.driverLicenseFront) {
+        documents.push({
+          type: 'driver_license_front',
+          url: req.files.driverLicenseFront[0].path,
+          fileName: req.files.driverLicenseFront[0].originalname
+        });
+      }
+      if (req.files.driverLicenseBack) {
+        documents.push({
+          type: 'driver_license_back',
+          url: req.files.driverLicenseBack[0].path,
+          fileName: req.files.driverLicenseBack[0].originalname
+        });
+      }
+    }
+
     // Create application without authentication
     const application = new Application({
-      propertyId: req.body.propertyId,
-      applicantInfo: req.body.applicantInfo,
-      employmentInfo: req.body.employmentInfo,
-      references: req.body.references || [],
-      moveInDate: req.body.moveInDate,
-      additionalNotes: req.body.additionalNotes,
+      propertyId: applicationData.propertyId,
+      applicantInfo: applicationData.applicantInfo,
+      employmentInfo: applicationData.employmentInfo,
+      references: applicationData.references || [],
+      moveInDate: applicationData.moveInDate,
+      additionalNotes: applicationData.additionalNotes,
+      documents: documents,
       status: 'pending',
       isPublic: true
     });
@@ -208,3 +269,9 @@ exports.createPublicApplication = async (req, res) => {
     res.status(500).json({ error: { message: 'Failed to submit application' } });
   }
 };
+
+// Export multer upload middleware
+exports.uploadDocuments = upload.fields([
+  { name: 'driverLicenseFront', maxCount: 1 },
+  { name: 'driverLicenseBack', maxCount: 1 }
+]);
