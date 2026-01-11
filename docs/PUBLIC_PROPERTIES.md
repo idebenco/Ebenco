@@ -43,13 +43,29 @@ Each property card displays:
 - Number of bedrooms (with bed icon)
 - Number of bathrooms (with bathtub icon)
 - Monthly rent price
-- "Apply Now" button linking directly to application form
+- **"APPLY" button** - Links directly to application form (requires login if not authenticated)
+- **"SCHEDULE TOUR" button** - Opens tour scheduling dialog (no login required)
 
 ### 5. Direct Application Flow
-- Each property has an "Apply Now" button
-- Clicking redirects to `/apply/{propertyId}`
-- Property ID is passed to pre-fill application form
+- Each property has two action buttons:
+  1. **APPLY** button - Redirects to `/apply/{propertyId}` for rental application
+  2. **SCHEDULE TOUR** button - Opens dialog to schedule property tour
+- Property ID is automatically passed to the application form
 - Seamless tenant onboarding experience
+
+### 6. Tour Scheduling Feature
+- **No login required** to schedule a tour
+- Opens a Material-UI dialog with form fields:
+  - Full Name (required)
+  - Email (required)
+  - Phone Number (required)
+  - Preferred Date (required)
+  - Preferred Time (required)
+  - Message (optional)
+- Property details displayed at top of dialog
+- Form validation ensures all required fields are filled
+- Success confirmation after submission
+- Tour requests can be processed by property managers
 
 ## Technical Implementation
 
@@ -117,6 +133,79 @@ Each property card displays:
 }
 ```
 
+## Visual Preview
+
+### Property Card Design
+
+```
+╔════════════════════════════════════════════════╗
+║                                                ║
+║          [Gradient Image Placeholder]          ║
+║              🏠 (Home Icon)                    ║
+║                                                ║
+╠════════════════════════════════════════════════╣
+║                                                ║
+║  Beautiful 2BR Downtown Apartment              ║
+║  📍 New York, NY                               ║
+║                                                ║
+║  Modern apartment in the heart of downtown     ║
+║  with easy access to transportation...         ║
+║                                                ║
+║  🛏️ 2 Beds    🚿 2 Baths                      ║
+║                                                ║
+║  $2,500/mo                                     ║
+║                                                ║
+║  ┌──────────────┐  ┌────────────────────┐     ║
+║  │  📝 APPLY    │  │  📅 SCHEDULE TOUR  │     ║
+║  └──────────────┘  └────────────────────┘     ║
+║  (Solid Purple)    (Outlined Purple)           ║
+║                                                ║
+╚════════════════════════════════════════════════╝
+```
+
+### Schedule Tour Dialog
+
+```
+╔════════════════════════════════════════════════╗
+║  📅 Schedule a Tour                            ║
+╠════════════════════════════════════════════════╣
+║                                                ║
+║  ┌──────────────────────────────────────────┐ ║
+║  │ Beautiful 2BR Downtown Apartment         │ ║
+║  │ New York, NY                             │ ║
+║  └──────────────────────────────────────────┘ ║
+║                                                ║
+║  Full Name: [________________________]         ║
+║                                                ║
+║  Email: [_____________________________]        ║
+║                                                ║
+║  Phone Number: [______________________]        ║
+║                                                ║
+║  Preferred Date: [____________________]        ║
+║                                                ║
+║  Preferred Time: [____________________]        ║
+║                                                ║
+║  Message (Optional):                           ║
+║  [_________________________________________]   ║
+║  [_________________________________________]   ║
+║  [_________________________________________]   ║
+║                                                ║
+║            [Cancel]  [Schedule Tour]           ║
+║                                                ║
+╚════════════════════════════════════════════════╝
+```
+
+### Success Confirmation
+
+```
+╔════════════════════════════════════════════════╗
+║                                                ║
+║  ✅ Tour request submitted successfully!       ║
+║  We'll contact you soon to confirm.            ║
+║                                                ║
+╚════════════════════════════════════════════════╝
+```
+
 ### Routing Configuration
 
 **File**: `web-dashboard/src/App.tsx`
@@ -170,11 +259,22 @@ Each property card displays:
    - Reads property details and pricing
    - Compares different options
 
-4. **Applying to Property**
-   - User clicks "Apply Now" button
+4. **Taking Action on Property**
+   - User has two options for each property:
+   
+   **Option A: Apply**
+   - Click "APPLY" button
    - Redirected to `/apply/{propertyId}`
    - Application form opens with property pre-selected
    - User completes application (see PUBLIC_APPLICATION_FORM.md)
+   
+   **Option B: Schedule Tour**
+   - Click "SCHEDULE TOUR" button
+   - Modal dialog opens with tour scheduling form
+   - User fills in: name, email, phone, preferred date/time
+   - Submits tour request (no login required)
+   - Receives confirmation message
+   - Property manager will contact to confirm
 
 ## Sharing Strategies
 
@@ -290,7 +390,13 @@ The page is fully responsive with breakpoints:
 - [ ] All filters work correctly
 - [ ] Search updates results immediately
 - [ ] Property cards display all information
-- [ ] "Apply Now" button redirects correctly
+- [ ] "APPLY" button redirects correctly to application form
+- [ ] "SCHEDULE TOUR" button opens dialog
+- [ ] Tour dialog displays property information
+- [ ] All tour form fields are required (except message)
+- [ ] Tour form validates email format
+- [ ] Tour submission shows success message
+- [ ] Dialog closes after successful submission
 - [ ] Responsive on mobile devices
 - [ ] Gradient background displays properly
 - [ ] No console errors
@@ -318,6 +424,9 @@ Potential improvements:
 8. **Property ratings**: Reviews from past tenants
 9. **Neighborhood info**: Schools, transit, amenities
 10. **Email alerts**: Notify when matching properties listed
+11. **Tour scheduling backend**: Create API endpoint to store tour requests in database
+12. **Tour confirmation emails**: Send automatic email confirmations to tenants and landlords
+13. **Calendar integration**: Sync tour appointments with Google Calendar/Outlook
 
 ## Support Information
 

@@ -17,6 +17,11 @@ import {
   InputLabel,
   Stack,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Alert,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -24,6 +29,8 @@ import {
   Bathtub as BathtubIcon,
   LocationOn as LocationIcon,
   Home as HomeIcon,
+  CalendarToday as CalendarIcon,
+  Assignment as AssignmentIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +50,17 @@ const PublicPropertiesPage: React.FC = () => {
     bedrooms: '',
     bathrooms: '',
   });
+  const [tourDialog, setTourDialog] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [tourForm, setTourForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    date: '',
+    time: '',
+    message: '',
+  });
+  const [tourSuccess, setTourSuccess] = useState(false);
 
   useEffect(() => {
     loadProperties();
@@ -78,6 +96,58 @@ const PublicPropertiesPage: React.FC = () => {
 
   const handleApply = (propertyId: string) => {
     navigate(`/apply/${propertyId}`);
+  };
+
+  const handleScheduleTour = (property: any) => {
+    setSelectedProperty(property);
+    setTourDialog(true);
+    setTourSuccess(false);
+  };
+
+  const handleTourFormChange = (field: string, value: string) => {
+    setTourForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleTourSubmit = async () => {
+    try {
+      // In a real application, this would send the tour request to the backend
+      // For now, we'll just show a success message
+      console.log('Tour request:', {
+        property: selectedProperty._id,
+        ...tourForm,
+      });
+      
+      setTourSuccess(true);
+      
+      // Reset form after 2 seconds and close dialog
+      setTimeout(() => {
+        setTourDialog(false);
+        setTourForm({
+          name: '',
+          email: '',
+          phone: '',
+          date: '',
+          time: '',
+          message: '',
+        });
+        setTourSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error scheduling tour:', error);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setTourDialog(false);
+    setTourForm({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      message: '',
+    });
+    setTourSuccess(false);
   };
 
   if (loading) {
@@ -317,32 +387,48 @@ const PublicPropertiesPage: React.FC = () => {
                       />
                     </Stack>
 
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#667eea' }}>
+                    <Box>
+                      <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#667eea', mb: 2 }}>
                         ${property.price}
                         <Typography component="span" variant="body2" color="text.secondary">
                           /mo
                         </Typography>
                       </Typography>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => handleApply(property._id)}
-                        sx={{
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)',
-                          },
-                        }}
-                      >
-                        Apply Now
-                      </Button>
+                      
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          fullWidth
+                          startIcon={<AssignmentIcon />}
+                          onClick={() => handleApply(property._id)}
+                          sx={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            '&:hover': {
+                              background: 'linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)',
+                            },
+                          }}
+                        >
+                          APPLY
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          startIcon={<CalendarIcon />}
+                          onClick={() => handleScheduleTour(property)}
+                          sx={{
+                            borderColor: '#667eea',
+                            color: '#667eea',
+                            '&:hover': {
+                              borderColor: '#5568d3',
+                              backgroundColor: 'rgba(102, 126, 234, 0.04)',
+                            },
+                          }}
+                        >
+                          SCHEDULE TOUR
+                        </Button>
+                      </Stack>
                     </Box>
                   </CardContent>
                 </Card>
@@ -358,6 +444,108 @@ const PublicPropertiesPage: React.FC = () => {
           </Typography>
         </Box>
       </Container>
+
+      {/* Schedule Tour Dialog */}
+      <Dialog open={tourDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <CalendarIcon sx={{ color: '#667eea' }} />
+            <Typography variant="h6">Schedule a Tour</Typography>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          {tourSuccess ? (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              Tour request submitted successfully! We'll contact you soon to confirm.
+            </Alert>
+          ) : (
+            <>
+              {selectedProperty && (
+                <Box sx={{ mb: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {selectedProperty.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedProperty.address.city}, {selectedProperty.address.state}
+                  </Typography>
+                </Box>
+              )}
+              
+              <Stack spacing={2}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  required
+                  value={tourForm.name}
+                  onChange={(e) => handleTourFormChange('name', e.target.value)}
+                />
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  required
+                  value={tourForm.email}
+                  onChange={(e) => handleTourFormChange('email', e.target.value)}
+                />
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  required
+                  value={tourForm.phone}
+                  onChange={(e) => handleTourFormChange('phone', e.target.value)}
+                />
+                <TextField
+                  fullWidth
+                  label="Preferred Date"
+                  type="date"
+                  required
+                  value={tourForm.date}
+                  onChange={(e) => handleTourFormChange('date', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="Preferred Time"
+                  type="time"
+                  required
+                  value={tourForm.time}
+                  onChange={(e) => handleTourFormChange('time', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  fullWidth
+                  label="Message (Optional)"
+                  multiline
+                  rows={3}
+                  value={tourForm.message}
+                  onChange={(e) => handleTourFormChange('message', e.target.value)}
+                  placeholder="Any specific questions or requirements?"
+                />
+              </Stack>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          {!tourSuccess && (
+            <>
+              <Button onClick={handleCloseDialog}>Cancel</Button>
+              <Button
+                variant="contained"
+                onClick={handleTourSubmit}
+                disabled={!tourForm.name || !tourForm.email || !tourForm.phone || !tourForm.date || !tourForm.time}
+                sx={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)',
+                  },
+                }}
+              >
+                Schedule Tour
+              </Button>
+            </>
+          )}
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
