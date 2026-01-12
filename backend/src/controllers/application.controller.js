@@ -256,12 +256,47 @@ exports.createPublicApplication = async (req, res) => {
 
     await application.save();
 
+    // Create compulsory $100 application fee payment
+    const Payment = require('../models/Payment.model');
+    
+    // Generate receipt number
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const count = await Payment.countDocuments({}) + 1;
+    const receiptNumber = `RCP-${year}${month}-${String(count).padStart(4, '0')}`;
+
+    const payment = new Payment({
+      propertyId: applicationData.propertyId,
+      landlordId: property.landlordId,
+      amount: 100, // $100 compulsory application fee
+      paymentType: 'application_fee',
+      status: 'pending',
+      description: `Application fee for ${property.title}`,
+      receiptNumber: receiptNumber,
+      dueDate: new Date(), // Due immediately
+      applicationId: application._id,
+      // Store applicant info for public applications (no tenant account yet)
+      tenantInfo: {
+        name: `${applicationData.applicantInfo.firstName} ${applicationData.applicantInfo.lastName}`,
+        email: applicationData.applicantInfo.email,
+        phone: applicationData.applicantInfo.phone
+      }
+    });
+
+    await payment.save();
+
     res.status(201).json({
-      message: 'Application submitted successfully',
+      message: 'Application submitted successfully. Please complete payment to finalize.',
       application: {
         _id: application._id,
         status: application.status,
         createdAt: application.createdAt
+      },
+      payment: {
+        _id: payment._id,
+        amount: payment.amount,
+        receiptNumber: payment.receiptNumber
       }
     });
   } catch (error) {

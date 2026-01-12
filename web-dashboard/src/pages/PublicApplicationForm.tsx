@@ -183,12 +183,22 @@ const PublicApplicationForm: React.FC = () => {
       
       formDataToSend.append('applicationData', JSON.stringify(applicationData));
 
-      await axios.post(`${API_URL}/applications/public`, formDataToSend, {
+      const response = await axios.post(`${API_URL}/applications/public`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setSuccess(true);
+      
+      // Redirect to payment page with payment ID
+      if (response.data.payment && response.data.payment._id) {
+        // Show success message briefly before redirecting
+        setSuccess(true);
+        setTimeout(() => {
+          navigate(`/payment/${response.data.payment._id}`);
+        }, 2000);
+      } else {
+        setSuccess(true);
+      }
     } catch (err: any) {
       setError(err.response?.data?.error?.message || 'Failed to submit application');
     } finally {
@@ -612,12 +622,16 @@ const PublicApplicationForm: React.FC = () => {
             <Typography variant="h4" gutterBottom>
               Application Submitted!
             </Typography>
-            <Typography variant="body1" color="textSecondary" paragraph>
-              Thank you for your application. The property owner will review your information and
-              contact you soon.
-            </Typography>
+            <Alert severity="info" sx={{ mt: 2, mb: 3, textAlign: 'left' }}>
+              <Typography variant="body1" gutterBottom>
+                <strong>Payment Required:</strong> A $100 application fee is required to complete your application.
+              </Typography>
+              <Typography variant="body2">
+                Redirecting you to the secure payment page...
+              </Typography>
+            </Alert>
             <Typography variant="body2" color="textSecondary">
-              You will receive a confirmation email at <strong>{formData.email}</strong>
+              You will receive a confirmation email at <strong>{formData.email}</strong> after payment is completed.
             </Typography>
           </Paper>
         </Container>

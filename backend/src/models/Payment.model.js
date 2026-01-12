@@ -9,7 +9,17 @@ const paymentSchema = new mongoose.Schema({
   tenantId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: false // Not required for public applications
+  },
+  // For public applications without tenant account
+  tenantInfo: {
+    name: String,
+    email: String,
+    phone: String
+  },
+  applicationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Application'
   },
   landlordId: {
     type: mongoose.Schema.Types.ObjectId,
