@@ -7,7 +7,10 @@ http://localhost:5000/api
 
 ## Quick Links
 
-- [API Endpoints](#authentication-endpoints) - Complete API reference
+- [Authentication Endpoints](#authentication-endpoints) - User registration, login, OAuth, phone auth
+- [User Account Features](#user-account-features) - Profile management, verification
+- [Property Endpoints](#property-endpoints) - Property CRUD operations
+- [Application Endpoints](#application-endpoints) - Rental application management
 - [TESTING.md](TESTING.md) - Network connectivity and security testing
 - [../docs/SECURITY.md](../docs/SECURITY.md) - Firewall rules and security configuration
 - [../docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) - Production deployment guide
@@ -37,7 +40,113 @@ For production deployment, review:
 - **CORS Configuration**: [SECURITY.md](../docs/SECURITY.md#cors-configuration)
 - **SSL/TLS Setup**: [SECURITY.md](../docs/SECURITY.md#ssltls-configuration)
 
+## User Account Features
+
+The system supports multiple authentication methods and comprehensive user management:
+
+### Authentication Methods
+
+1. **Email/Password** ✅ Fully Implemented
+   - Traditional registration and login
+   - Password hashing with bcrypt
+   - JWT tokens with 7-day expiration
+
+2. **Google OAuth** ✅ Integration Ready
+   - One-click Google Sign-In
+   - Automatic account creation
+   - Profile picture from Google
+   - Email pre-verified
+
+3. **Phone Authentication** ✅ Setup Ready
+   - SMS OTP verification
+   - Twilio/Firebase integration ready
+   - Phone number validation
+
+### User Roles
+
+- **Tenant**: Browse properties, submit applications, track payments
+- **Landlord**: Manage properties, review applications, create payments
+- **Agent**: All landlord features + manage multiple properties
+- **Admin**: Full system access, user management, analytics
+
+### Profile Management
+
+Users can manage their profiles including:
+- Personal information (name, phone, bio)
+- Address details
+- Profile picture/avatar
+- Email and phone verification status
+- Account preferences (notifications, language)
+- Password change
+- Last login tracking
+
+### Google OAuth Setup
+
+To enable Google OAuth:
+
+1. **Create Google OAuth Credentials**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select existing
+   - Enable Google+ API
+   - Create OAuth 2.0 credentials
+   - Add authorized redirect URIs
+
+2. **Environment Variables** (add to `.env`):
+```bash
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+```
+
+3. **Frontend Integration**:
+```javascript
+// Install Google OAuth library
+npm install @react-oauth/google
+
+// Use Google Login button
+import { GoogleLogin } from '@react-oauth/google';
+
+<GoogleLogin
+  onSuccess={(response) => {
+    // Send response.credential to /api/auth/google
+  }}
+  onError={() => console.log('Login Failed')}
+/>
+```
+
+### Phone Authentication Setup (Twilio)
+
+1. **Sign up for Twilio**: https://www.twilio.com/
+2. **Get credentials**:
+   - Account SID
+   - Auth Token
+   - Phone Number
+
+3. **Environment Variables** (add to `.env`):
+```bash
+TWILIO_ACCOUNT_SID=your-account-sid
+TWILIO_AUTH_TOKEN=your-auth-token
+TWILIO_PHONE_NUMBER=+1234567890
+```
+
+4. **Install Twilio SDK** (when implementing):
+```bash
+npm install twilio
+```
+
+### Firebase Alternative for Phone Auth
+
+1. **Create Firebase project**: https://console.firebase.google.com/
+2. **Enable Phone Authentication**
+3. **Environment Variables**:
+```bash
+FIREBASE_API_KEY=your-api-key
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_AUTH_DOMAIN=your-auth-domain
+```
+
 ## Authentication
+
 All authenticated endpoints require a JWT token in the Authorization header:
 ```
 Authorization: Bearer <token>
@@ -47,7 +156,7 @@ Authorization: Bearer <token>
 
 ## Authentication Endpoints
 
-### Register User
+### Register User (Email)
 **POST** `/auth/register`
 
 Create a new user account.
@@ -134,6 +243,98 @@ Update the current user's profile.
   "profile": {
     "firstName": "Jane",
     "phone": "+9876543210"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Profile updated successfully",
+  "user": { ... }
+}
+```
+
+---
+
+### Google OAuth Authentication
+**POST** `/auth/google`
+
+Authenticate using Google OAuth credentials.
+
+**Request Body:**
+```json
+{
+  "googleId": "google_user_id",
+  "email": "user@gmail.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "avatar": "https://lh3.googleusercontent.com/..."
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Google authentication successful",
+  "token": "jwt_token_here",
+  "user": {
+    "_id": "user_id",
+    "email": "user@gmail.com",
+    "googleId": "google_user_id",
+    "emailVerified": true,
+    "profile": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "avatar": "https://lh3.googleusercontent.com/..."
+    }
+  }
+}
+```
+
+### Send Phone OTP
+**POST** `/auth/phone/send-otp`
+
+Send OTP to phone number for verification.
+
+**Request Body:**
+```json
+{
+  "phoneNumber": "+1234567890"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "OTP sent successfully",
+  "phoneNumber": "+1234567890"
+}
+```
+
+### Verify Phone OTP
+**POST** `/auth/phone/verify-otp`
+
+Verify phone number using OTP code.
+
+**Request Body:**
+```json
+{
+  "phoneNumber": "+1234567890",
+  "otp": "123456"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Phone verified successfully",
+  "token": "jwt_token_here",
+  "user": {
+    "_id": "user_id",
+    "phoneNumber": "+1234567890",
+    "phoneVerified": true,
+    ...
   }
 }
 ```

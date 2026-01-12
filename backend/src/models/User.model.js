@@ -11,9 +11,29 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     minlength: 6
   },
+  // OAuth fields
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  // Verification fields
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  phoneVerified: {
+    type: Boolean,
+    default: false
+  },
+  lastLogin: Date,
   role: {
     type: String,
     enum: ['tenant', 'landlord', 'agent', 'admin'],
@@ -32,7 +52,29 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    avatar: String
+    avatar: String,
+    bio: String,
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zipCode: String,
+      country: String
+    }
+  },
+  preferences: {
+    notifications: {
+      type: Boolean,
+      default: true
+    },
+    newsletter: {
+      type: Boolean,
+      default: false
+    },
+    language: {
+      type: String,
+      default: 'en'
+    }
   },
   isActive: {
     type: Boolean,

@@ -32,4 +32,11 @@ router.get('/me', auth, authController.getMe);
 // Update profile
 router.put('/profile', auth, authController.updateProfile);
 
+// Google OAuth
+router.post('/google', authController.googleAuth);
+
+// Phone authentication (placeholders for Twilio/Firebase integration)
+router.post('/phone/send-otp', authController.sendPhoneOTP);
+router.post('/phone/verify-otp', authController.verifyPhoneOTP);
+
 module.exports = router;
