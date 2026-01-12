@@ -112,12 +112,26 @@ const PublicPropertiesPage: React.FC = () => {
 
   const handleTourSubmit = async () => {
     try {
-      // In a real application, this would send the tour request to the backend
-      // For now, we'll just show a success message
-      console.log('Tour request:', {
-        property: selectedProperty._id,
-        ...tourForm,
+      // Validate required fields
+      if (!tourForm.name || !tourForm.email || !tourForm.phone || !tourForm.date || !tourForm.time) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Send tour request to backend
+      const response = await axios.post(`${API_URL}/tours`, {
+        propertyId: selectedProperty._id,
+        tenantInfo: {
+          name: tourForm.name,
+          email: tourForm.email,
+          phone: tourForm.phone,
+        },
+        preferredDate: tourForm.date,
+        preferredTime: tourForm.time,
+        message: tourForm.message,
       });
+
+      console.log('Tour request response:', response.data);
       
       setTourSuccess(true);
       
@@ -136,6 +150,7 @@ const PublicPropertiesPage: React.FC = () => {
       }, 2000);
     } catch (error) {
       console.error('Error scheduling tour:', error);
+      alert(error.response?.data?.message || 'Error scheduling tour. Please try again.');
     }
   };
 

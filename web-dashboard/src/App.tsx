@@ -11,6 +11,7 @@ import UsersPage from './pages/UsersPage';
 import PropertiesPage from './pages/PropertiesPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import PaymentsPage from './pages/PaymentsPage';
+import TourRequestsPage from './pages/TourRequestsPage';
 import PublicApplicationForm from './pages/PublicApplicationForm';
 import PublicPropertiesPage from './pages/PublicPropertiesPage';
 
@@ -64,6 +65,7 @@ function App() {
               <Route path="properties" element={<PropertiesPage />} />
               <Route path="applications" element={<ApplicationsPage />} />
               <Route path="payments" element={<PaymentsPage />} />
+              <Route path="tours" element={<TourRequestsPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
