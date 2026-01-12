@@ -613,13 +613,13 @@ const PublicApplicationForm: React.FC = () => {
 
           <Box component="ul" sx={{ pl: 2, '& li': { mb: 1.5 } }}>
             <Typography component="li" variant="body2">
-              <strong>Payment Authorization:</strong> I authorize a non-refundable application processing fee of <strong>$100.00 (USD)</strong> to be charged to my payment method immediately upon submission of this application.
+              <strong>Payment Authorization:</strong> I authorize an application processing fee of <strong>$100.00 (USD)</strong> to be charged to my payment method immediately upon submission of this application.
             </Typography>
             <Typography component="li" variant="body2">
               <strong>Purpose:</strong> This fee covers the costs associated with processing my rental application, including but not limited to credit checks, background verification, employment verification, and administrative processing.
             </Typography>
             <Typography component="li" variant="body2">
-              <strong>Non-Refundable:</strong> I understand that this application fee is <strong>non-refundable</strong>, regardless of whether my application is approved, denied, or withdrawn.
+              <strong>Refund Policy:</strong> If you decide you are no longer interested in the apartment or property, the <strong>$100 application fee is refundable</strong>. You may request a refund by contacting the property owner or management. However, once the application processing has been completed (credit checks, background verification), the fee may not be refunded as the services have been rendered.
             </Typography>
             <Typography component="li" variant="body2">
               <strong>Secure Payment:</strong> Payment will be processed securely through Stripe, a PCI DSS Level 1 compliant payment processor. My payment information will not be stored on this platform.
@@ -649,7 +649,7 @@ const PublicApplicationForm: React.FC = () => {
             }
             label={
               <Typography variant="body2">
-                <strong>I have read and agree to the terms above. I authorize the $100 application fee payment and understand it is non-refundable.</strong>
+                <strong>I have read and agree to the terms above. I authorize the $100 application fee payment and understand the refund policy.</strong>
               </Typography>
             }
             sx={{ mt: 2, alignItems: 'flex-start', '& .MuiFormControlLabel-label': { mt: 0.5 } }}
