@@ -17,6 +17,8 @@ import {
   Chip,
   Card,
   CardContent,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -77,6 +79,8 @@ const PublicApplicationForm: React.FC = () => {
     driverLicenseFront: '',
     driverLicenseBack: '',
   });
+
+  const [paymentConsent, setPaymentConsent] = useState(false);
 
   useEffect(() => {
     if (propertyId) {
@@ -586,6 +590,72 @@ const PublicApplicationForm: React.FC = () => {
           ))}
         </Box>
       </Grid>
+
+      <Grid item xs={12}>
+        <Divider sx={{ my: 3 }} />
+        <Paper 
+          elevation={0}
+          sx={{ 
+            p: 3, 
+            bgcolor: 'info.lighter',
+            border: '2px solid',
+            borderColor: 'info.main',
+            borderRadius: 2
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ color: 'info.dark', fontWeight: 'bold' }}>
+            Application Fee Payment Authorization
+          </Typography>
+          
+          <Typography variant="body2" paragraph sx={{ mt: 2, lineHeight: 1.8 }}>
+            By submitting this rental application, I hereby authorize and consent to the following:
+          </Typography>
+
+          <Box component="ul" sx={{ pl: 2, '& li': { mb: 1.5 } }}>
+            <Typography component="li" variant="body2">
+              <strong>Payment Authorization:</strong> I authorize a non-refundable application processing fee of <strong>$100.00 (USD)</strong> to be charged to my payment method immediately upon submission of this application.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Purpose:</strong> This fee covers the costs associated with processing my rental application, including but not limited to credit checks, background verification, employment verification, and administrative processing.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Non-Refundable:</strong> I understand that this application fee is <strong>non-refundable</strong>, regardless of whether my application is approved, denied, or withdrawn.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Secure Payment:</strong> Payment will be processed securely through Stripe, a PCI DSS Level 1 compliant payment processor. My payment information will not be stored on this platform.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Receipt:</strong> A digital receipt will be automatically generated and sent to my email address ({formData.email}) upon successful payment completion.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Application Processing:</strong> My application will not be reviewed or processed until the application fee has been successfully paid in full.
+            </Typography>
+          </Box>
+
+          <Alert severity="warning" sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="body2">
+              <strong>Important:</strong> You will be redirected to a secure payment page immediately after submitting this application. Your application will remain in "pending" status until the $100 application fee is paid.
+            </Typography>
+          </Alert>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={paymentConsent}
+                onChange={(e) => setPaymentConsent(e.target.checked)}
+                color="primary"
+                required
+              />
+            }
+            label={
+              <Typography variant="body2">
+                <strong>I have read and agree to the terms above. I authorize the $100 application fee payment and understand it is non-refundable.</strong>
+              </Typography>
+            }
+            sx={{ mt: 2, alignItems: 'flex-start', '& .MuiFormControlLabel-label': { mt: 0.5 } }}
+          />
+        </Paper>
+      </Grid>
     </Grid>
   );
 
@@ -696,10 +766,10 @@ const PublicApplicationForm: React.FC = () => {
               <Button
                 variant="contained"
                 onClick={handleSubmit}
-                disabled={loading}
+                disabled={loading || !paymentConsent}
                 size="large"
               >
-                {loading ? 'Submitting...' : 'Submit Application'}
+                {loading ? 'Submitting...' : 'Submit Application & Proceed to Payment'}
               </Button>
             ) : (
               <Button variant="contained" onClick={handleNext} size="large">
