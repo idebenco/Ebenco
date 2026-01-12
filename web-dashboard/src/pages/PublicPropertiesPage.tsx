@@ -345,13 +345,44 @@ const PublicPropertiesPage: React.FC = () => {
                     component="div"
                     sx={{
                       height: 200,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: property.images && property.images.length > 0
+                        ? `url(${property.images[0]}) center/cover no-repeat`
+                        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      position: 'relative',
                     }}
                   >
-                    <HomeIcon sx={{ fontSize: 80, color: 'white', opacity: 0.7 }} />
+                    {(!property.images || property.images.length === 0) && (
+                      <HomeIcon sx={{ fontSize: 80, color: 'white', opacity: 0.7 }} />
+                    )}
+                    {property.images && property.images.length > 1 && (
+                      <Chip
+                        label={`${property.images.length} photos`}
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          bottom: 8,
+                          right: 8,
+                          bgcolor: 'rgba(0,0,0,0.6)',
+                          color: 'white',
+                        }}
+                      />
+                    )}
+                    {property.propertyType && (
+                      <Chip
+                        label={property.propertyType.toUpperCase()}
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          left: 8,
+                          bgcolor: '#667eea',
+                          color: 'white',
+                        }}
+                      />
+                    )}
                   </CardMedia>
                   <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
@@ -361,7 +392,7 @@ const PublicPropertiesPage: React.FC = () => {
                     <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
                       <LocationIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
                       <Typography variant="body2" color="text.secondary">
-                        {property.address.city}, {property.address.state}
+                        {property.address.street}, {property.address.city}, {property.address.state} {property.address.zipCode}
                       </Typography>
                     </Stack>
 
@@ -374,7 +405,7 @@ const PublicPropertiesPage: React.FC = () => {
                       {property.description?.length > 100 && '...'}
                     </Typography>
 
-                    <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                    <Stack direction="row" spacing={1} sx={{ mb: 1, flexWrap: 'wrap' }}>
                       <Chip
                         icon={<BedIcon />}
                         label={`${property.bedrooms} Beds`}
@@ -387,13 +418,46 @@ const PublicPropertiesPage: React.FC = () => {
                         size="small"
                         variant="outlined"
                       />
+                      {property.squareFeet && (
+                        <Chip
+                          label={`${property.squareFeet} sqft`}
+                          size="small"
+                          variant="outlined"
+                        />
+                      )}
                     </Stack>
+
+                    {property.amenities && property.amenities.length > 0 && (
+                      <Stack direction="row" spacing={0.5} sx={{ mb: 2, flexWrap: 'wrap', gap: 0.5 }}>
+                        {property.amenities.slice(0, 3).map((amenity: string, idx: number) => (
+                          <Chip
+                            key={idx}
+                            label={amenity}
+                            size="small"
+                            sx={{ bgcolor: '#f5f5f5', fontSize: '0.7rem' }}
+                          />
+                        ))}
+                        {property.amenities.length > 3 && (
+                          <Chip
+                            label={`+${property.amenities.length - 3} more`}
+                            size="small"
+                            sx={{ bgcolor: '#f5f5f5', fontSize: '0.7rem' }}
+                          />
+                        )}
+                      </Stack>
+                    )}
+
+                    {property.landlordId && property.showContactInfo !== false && (
+                      <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
+                        Contact: {property.landlordId.email || 'Available on request'}
+                      </Typography>
+                    )}
 
                     <Box>
                       <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#667eea', mb: 2 }}>
-                        ${property.price}
+                        ${property.price?.toLocaleString()}
                         <Typography component="span" variant="body2" color="text.secondary">
-                          /mo
+                          {property.listingType === 'sale' ? '' : '/mo'}
                         </Typography>
                       </Typography>
                       

@@ -15,6 +15,16 @@ const propertySchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  propertyType: {
+    type: String,
+    enum: ['apartment', 'house', 'condo', 'townhouse', 'studio', 'duplex', 'other'],
+    default: 'apartment'
+  },
+  listingType: {
+    type: String,
+    enum: ['rent', 'sale'],
+    default: 'rent'
+  },
   address: {
     street: {
       type: String,
@@ -35,6 +45,18 @@ const propertySchema = new mongoose.Schema({
     country: {
       type: String,
       default: 'USA'
+    },
+    coordinates: {
+      latitude: {
+        type: Number,
+        min: -90,
+        max: 90
+      },
+      longitude: {
+        type: Number,
+        min: -180,
+        max: 180
+      }
     }
   },
   price: {
@@ -56,7 +78,15 @@ const propertySchema = new mongoose.Schema({
     type: Number,
     min: 0
   },
+  yearBuilt: {
+    type: Number,
+    min: 1800,
+    max: new Date().getFullYear() + 1
+  },
   images: [{
+    type: String
+  }],
+  videos: [{
     type: String
   }],
   amenities: [{
@@ -67,9 +97,17 @@ const propertySchema = new mongoose.Schema({
     enum: ['available', 'rented', 'maintenance'],
     default: 'available'
   },
+  availableDate: {
+    type: Date,
+    default: Date.now
+  },
   featured: {
     type: Boolean,
     default: false
+  },
+  showContactInfo: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
