@@ -758,3 +758,106 @@ Common HTTP status codes:
 - `403` - Forbidden
 - `404` - Not Found
 - `500` - Internal Server Error
+
+
+## Payment Integration (Stripe)
+
+### Stripe Setup
+
+1. **Get Stripe API Keys**:
+   - Sign up at https://stripe.com
+   - Navigate to Developers > API keys
+   - Copy your Secret key and Publishable key
+
+2. **Configure Environment Variables**:
+   ```bash
+   # Backend (.env)
+   STRIPE_SECRET_KEY=sk_test_your_key_here
+   STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+
+   # Frontend (web-dashboard/.env)
+   REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
+   ```
+
+3. **Install Stripe Package**:
+   ```bash
+   npm install stripe
+   ```
+
+4. **Uncomment Stripe Code**:
+   - In `backend/src/controllers/payment.controller.js`
+   - Uncomment the `stripe.paymentIntents` calls
+   - Enable production mode
+
+### Payment Types
+
+- **Application Fee**: 0 one-time fee for rental applications
+- **Rent**: Monthly recurring payments
+- **Security Deposit**: First + last month deposit
+- **Late Fees**: Automatic calculation for overdue payments
+- **Maintenance**: One-time maintenance charges
+
+### Payment Endpoints
+
+```javascript
+POST /api/payments/create-intent
+  - Create Stripe payment intent
+  - Body: { paymentId }
+  - Returns: { clientSecret, paymentIntentId }
+
+POST /api/payments/:id/confirm
+  - Confirm payment
+  - Body: { paymentIntentId, paymentMethodDetails }
+  - Returns: { payment, receiptUrl }
+
+POST /api/payments/:id/refund
+  - Refund payment
+  - Body: { amount, reason }
+  - Returns: { payment }
+
+GET /api/payments/:id/receipt
+  - Download receipt
+  - Returns: PDF receipt
+
+GET /api/payments/statistics
+  - Get payment analytics
+  - Returns: { totalRevenue, paymentsByType, paymentsByStatus }
+```
+
+### Testing Payments
+
+Use Stripe test cards:
+- **Success**: 4242 4242 4242 4242
+- **Declined**: 4000 0000 0000 0002
+- **3D Secure**: 4000 0025 0000 3155
+
+See https://stripe.com/docs/testing for more test cards.
+
+### Webhook Setup
+
+1. **Configure Webhook**:
+   - Go to Stripe Dashboard > Developers > Webhooks
+   - Add endpoint: https://yourdomain.com/api/webhooks/stripe
+   - Select events: payment_intent.succeeded, payment_intent.payment_failed
+
+2. **Handle Webhooks**:
+   ```javascript
+   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+   
+   app.post('/api/webhooks/stripe', async (req, res) => {
+     const sig = req.headers['stripe-signature'];
+     const event = stripe.webhooks.constructEvent(
+       req.body, sig, process.env.STRIPE_WEBHOOK_SECRET
+     );
+     
+     // Handle the event
+     if (event.type === 'payment_intent.succeeded') {
+       // Update payment status
+     }
+     
+     res.json({ received: true });
+   });
+   ```
+
+

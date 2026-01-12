@@ -75,4 +75,34 @@ export const paymentService = {
     const response = await api.get('/payments', { params });
     return response.data;
   },
+
+  getPayment: async (id: string) => {
+    const response = await api.get(`/payments/${id}`);
+    return response.data;
+  },
+
+  createPaymentIntent: async (paymentId: string) => {
+    const response = await api.post('/payments/create-intent', { paymentId });
+    return response.data;
+  },
+
+  confirmPayment: async (paymentId: string, paymentMethodDetails: any) => {
+    const response = await api.post(`/payments/${paymentId}/confirm`, paymentMethodDetails);
+    return response.data;
+  },
+
+  refundPayment: async (paymentId: string, amount?: number, reason?: string) => {
+    const response = await api.post(`/payments/${paymentId}/refund`, { amount, reason });
+    return response.data;
+  },
+
+  getReceipt: async (paymentId: string) => {
+    const response = await api.get(`/payments/${paymentId}/receipt`);
+    return response.data;
+  },
+
+  getStatistics: async () => {
+    const response = await api.get('/payments/statistics');
+    return response.data;
+  },
 };

@@ -14,6 +14,8 @@ import PaymentsPage from './pages/PaymentsPage';
 import TourRequestsPage from './pages/TourRequestsPage';
 import PublicApplicationForm from './pages/PublicApplicationForm';
 import PublicPropertiesPage from './pages/PublicPropertiesPage';
+import PaymentCheckoutPage from './pages/PaymentCheckoutPage';
+import PaymentHistoryPage from './pages/PaymentHistoryPage';
 
 const theme = createTheme({
   palette: {
@@ -65,6 +67,8 @@ function App() {
               <Route path="properties" element={<PropertiesPage />} />
               <Route path="applications" element={<ApplicationsPage />} />
               <Route path="payments" element={<PaymentsPage />} />
+              <Route path="payments/history" element={<PaymentHistoryPage />} />
+              <Route path="payment/:id" element={<PaymentCheckoutPage />} />
               <Route path="tours" element={<TourRequestsPage />} />
             </Route>
           </Routes>
