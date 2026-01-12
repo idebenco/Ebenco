@@ -16,6 +16,7 @@ import PublicApplicationForm from './pages/PublicApplicationForm';
 import PublicPropertiesPage from './pages/PublicPropertiesPage';
 import PaymentCheckoutPage from './pages/PaymentCheckoutPage';
 import PaymentHistoryPage from './pages/PaymentHistoryPage';
+import WithdrawalPage from './pages/WithdrawalPage';
 
 const theme = createTheme({
   palette: {
@@ -70,6 +71,7 @@ function App() {
               <Route path="payments/history" element={<PaymentHistoryPage />} />
               <Route path="payment/:id" element={<PaymentCheckoutPage />} />
               <Route path="tours" element={<TourRequestsPage />} />
+              <Route path="withdrawals" element={<WithdrawalPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
