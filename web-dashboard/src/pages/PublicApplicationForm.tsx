@@ -1,0 +1,792 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Paper,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Grid,
+  Alert,
+  Stepper,
+  Step,
+  StepLabel,
+  MenuItem,
+  InputAdornment,
+  Divider,
+  Chip,
+  Card,
+  CardContent,
+  Checkbox,
+  FormControlLabel,
+} from '@mui/material';
+import {
+  Home as HomeIcon,
+  Work as WorkIcon,
+  Person as PersonIcon,
+  Description as DescriptionIcon,
+  CheckCircle as CheckCircleIcon,
+  CloudUpload as CloudUploadIcon,
+  AttachFile as AttachFileIcon,
+} from '@mui/icons-material';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+const steps = ['Personal Info', 'Employment Details', 'References', 'Review & Submit'];
+
+const PublicApplicationForm: React.FC = () => {
+  const { propertyId } = useParams<{ propertyId: string }>();
+  const navigate = useNavigate();
+  
+  const [activeStep, setActiveStep] = useState(0);
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  // Form data
+  const [formData, setFormData] = useState({
+    // Personal Info
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    ssn: '',
+    // Employment Info
+    employer: '',
+    position: '',
+    income: '',
+    employmentStartDate: '',
+    // References
+    references: [
+      { name: '', phone: '', relationship: '', email: '' },
+      { name: '', phone: '', relationship: '', email: '' },
+    ],
+    // Additional Info
+    moveInDate: '',
+    additionalNotes: '',
+  });
+
+  // File uploads
+  const [files, setFiles] = useState({
+    driverLicenseFront: null as File | null,
+    driverLicenseBack: null as File | null,
+  });
+
+  const [fileNames, setFileNames] = useState({
+    driverLicenseFront: '',
+    driverLicenseBack: '',
+  });
+
+  const [paymentConsent, setPaymentConsent] = useState(false);
+
+  useEffect(() => {
+    if (propertyId) {
+      loadProperty();
+    }
+  }, [propertyId]);
+
+  const loadProperty = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/properties/${propertyId}`);
+      setProperty(response.data.property);
+    } catch (err) {
+      setError('Failed to load property details');
+    }
+  };
+
+  const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [field]: event.target.value });
+  };
+
+  const handleReferenceChange = (index: number, field: string) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newReferences = [...formData.references];
+    newReferences[index] = { ...newReferences[index], [field]: event.target.value };
+    setFormData({ ...formData, references: newReferences });
+  };
+
+  const handleFileChange = (field: 'driverLicenseFront' | 'driverLicenseBack') => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('File must be JPG, PNG, or PDF');
+        return;
+      }
+      setFiles({ ...files, [field]: file });
+      setFileNames({ ...fileNames, [field]: file.name });
+      setError('');
+    }
+  };
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Validate required documents
+      if (!files.driverLicenseFront || !files.driverLicenseBack) {
+        setError('Please upload both front and back of your driver\'s license');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.ssn || formData.ssn.length < 9) {
+        setError('Please enter a valid SSN');
+        setLoading(false);
+        return;
+      }
+
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add files
+      formDataToSend.append('driverLicenseFront', files.driverLicenseFront);
+      formDataToSend.append('driverLicenseBack', files.driverLicenseBack);
+      
+      // Add application data as JSON
+      const applicationData = {
+        propertyId,
+        applicantInfo: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          ssn: formData.ssn,
+        },
+        employmentInfo: {
+          employer: formData.employer,
+          position: formData.position,
+          income: parseFloat(formData.income),
+          startDate: formData.employmentStartDate,
+        },
+        references: formData.references.filter(ref => ref.name && ref.phone),
+        moveInDate: formData.moveInDate,
+        additionalNotes: formData.additionalNotes,
+      };
+      
+      formDataToSend.append('applicationData', JSON.stringify(applicationData));
+
+      const response = await axios.post(`${API_URL}/applications/public`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      // Redirect to payment page with payment ID
+      if (response.data.payment && response.data.payment._id) {
+        // Show success message briefly before redirecting
+        setSuccess(true);
+        setTimeout(() => {
+          navigate(`/payment/${response.data.payment._id}`);
+        }, 2000);
+      } else {
+        setSuccess(true);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || 'Failed to submit application');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderPersonalInfo = () => (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="h6" gutterBottom>
+          Personal Information
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="First Name"
+          value={formData.firstName}
+          onChange={handleChange('firstName')}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Last Name"
+          value={formData.lastName}
+          onChange={handleChange('lastName')}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Email Address"
+          type="email"
+          value={formData.email}
+          onChange={handleChange('email')}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Phone Number"
+          value={formData.phone}
+          onChange={handleChange('phone')}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          required
+          fullWidth
+          label="Social Security Number (SSN)"
+          value={formData.ssn}
+          onChange={handleChange('ssn')}
+          placeholder="XXX-XX-XXXX"
+          helperText="Your SSN is encrypted and securely stored"
+          inputProps={{ maxLength: 11 }}
+        />
+      </Grid>
+      
+      <Grid item xs={12}>
+        <Divider sx={{ my: 2 }}>
+          <Chip label="Document Uploads" icon={<AttachFileIcon />} />
+        </Divider>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+          <CardContent>
+            <Typography variant="subtitle2" gutterBottom>
+              Driver's License (Front) *
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Upload a clear photo of the front of your driver's license
+            </Typography>
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {fileNames.driverLicenseFront ? 'Change File' : 'Upload Front'}
+              <input
+                type="file"
+                hidden
+                accept="image/jpeg,image/jpg,image/png,application/pdf"
+                onChange={handleFileChange('driverLicenseFront')}
+              />
+            </Button>
+            {fileNames.driverLicenseFront && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2" noWrap>
+                  {fileNames.driverLicenseFront}
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+          <CardContent>
+            <Typography variant="subtitle2" gutterBottom>
+              Driver's License (Back) *
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Upload a clear photo of the back of your driver's license
+            </Typography>
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              {fileNames.driverLicenseBack ? 'Change File' : 'Upload Back'}
+              <input
+                type="file"
+                hidden
+                accept="image/jpeg,image/jpg,image/png,application/pdf"
+                onChange={handleFileChange('driverLicenseBack')}
+              />
+            </Button>
+            {fileNames.driverLicenseBack && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2" noWrap>
+                  {fileNames.driverLicenseBack}
+                </Typography>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Alert severity="info">
+          <Typography variant="body2">
+            <strong>Accepted formats:</strong> JPG, PNG, or PDF (max 5MB per file)
+          </Typography>
+        </Alert>
+      </Grid>
+    </Grid>
+  );
+
+  const renderEmploymentInfo = () => (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="h6" gutterBottom>
+          Employment Information
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Employer Name"
+          value={formData.employer}
+          onChange={handleChange('employer')}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <WorkIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Position/Title"
+          value={formData.position}
+          onChange={handleChange('position')}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Annual Income"
+          type="number"
+          value={formData.income}
+          onChange={handleChange('income')}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          required
+          fullWidth
+          label="Employment Start Date"
+          type="date"
+          value={formData.employmentStartDate}
+          onChange={handleChange('employmentStartDate')}
+          InputLabelProps={{ shrink: true }}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          required
+          fullWidth
+          label="Desired Move-in Date"
+          type="date"
+          value={formData.moveInDate}
+          onChange={handleChange('moveInDate')}
+          InputLabelProps={{ shrink: true }}
+        />
+      </Grid>
+    </Grid>
+  );
+
+  const renderReferences = () => (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="h6" gutterBottom>
+          References
+        </Typography>
+        <Typography variant="body2" color="textSecondary" paragraph>
+          Please provide at least one reference (previous landlord, employer, or personal reference)
+        </Typography>
+      </Grid>
+      {formData.references.map((ref, index) => (
+        <Grid item xs={12} key={index}>
+          <Paper sx={{ p: 2, bgcolor: 'grey.50' }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Reference {index + 1}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  value={ref.name}
+                  onChange={handleReferenceChange(index, 'name')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  value={ref.phone}
+                  onChange={handleReferenceChange(index, 'phone')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  value={ref.email}
+                  onChange={handleReferenceChange(index, 'email')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Relationship"
+                  value={ref.relationship}
+                  onChange={handleReferenceChange(index, 'relationship')}
+                  size="small"
+                >
+                  <MenuItem value="landlord">Previous Landlord</MenuItem>
+                  <MenuItem value="employer">Employer</MenuItem>
+                  <MenuItem value="personal">Personal Reference</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
+                </TextField>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      ))}
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          label="Additional Notes (Optional)"
+          value={formData.additionalNotes}
+          onChange={handleChange('additionalNotes')}
+          placeholder="Any additional information you'd like to share..."
+        />
+      </Grid>
+    </Grid>
+  );
+
+  const renderReview = () => (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="h6" gutterBottom>
+          Review Your Application
+        </Typography>
+      </Grid>
+      
+      {property && (
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2, bgcolor: 'primary.light', color: 'primary.contrastText' }}>
+            <Typography variant="subtitle1">
+              <HomeIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+              Applying for: {property.title}
+            </Typography>
+            <Typography variant="body2">
+              {property.address.street}, {property.address.city}, {property.address.state}
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 1 }}>
+              ${property.price}/month
+            </Typography>
+          </Paper>
+        </Grid>
+      )}
+
+      <Grid item xs={12}>
+        <Divider>
+          <Chip label="Personal Information" />
+        </Divider>
+        <Box sx={{ mt: 2 }}>
+          <Typography><strong>Name:</strong> {formData.firstName} {formData.lastName}</Typography>
+          <Typography><strong>Email:</strong> {formData.email}</Typography>
+          <Typography><strong>Phone:</strong> {formData.phone}</Typography>
+          <Typography><strong>SSN:</strong> ***-**-{formData.ssn.slice(-4)}</Typography>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>Documents Uploaded:</Typography>
+            {fileNames.driverLicenseFront && (
+              <Chip 
+                label={`Driver's License (Front): ${fileNames.driverLicenseFront}`} 
+                color="success" 
+                size="small" 
+                sx={{ mr: 1, mb: 1 }}
+                icon={<AttachFileIcon />}
+              />
+            )}
+            {fileNames.driverLicenseBack && (
+              <Chip 
+                label={`Driver's License (Back): ${fileNames.driverLicenseBack}`} 
+                color="success" 
+                size="small" 
+                sx={{ mb: 1 }}
+                icon={<AttachFileIcon />}
+              />
+            )}
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Divider>
+          <Chip label="Employment Details" />
+        </Divider>
+        <Box sx={{ mt: 2 }}>
+          <Typography><strong>Employer:</strong> {formData.employer}</Typography>
+          <Typography><strong>Position:</strong> {formData.position}</Typography>
+          <Typography><strong>Annual Income:</strong> ${formData.income}</Typography>
+          <Typography><strong>Move-in Date:</strong> {formData.moveInDate}</Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Divider>
+          <Chip label="References" />
+        </Divider>
+        <Box sx={{ mt: 2 }}>
+          {formData.references.filter(ref => ref.name).map((ref, idx) => (
+            <Typography key={idx}>
+              <strong>{ref.name}</strong> ({ref.relationship}) - {ref.phone}
+            </Typography>
+          ))}
+        </Box>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Divider sx={{ my: 3 }} />
+        <Paper 
+          elevation={0}
+          sx={{ 
+            p: 3, 
+            bgcolor: 'info.lighter',
+            border: '2px solid',
+            borderColor: 'info.main',
+            borderRadius: 2
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ color: 'info.dark', fontWeight: 'bold' }}>
+            Application Fee Payment Authorization
+          </Typography>
+          
+          <Typography variant="body2" paragraph sx={{ mt: 2, lineHeight: 1.8 }}>
+            By submitting this rental application, I hereby authorize and consent to the following:
+          </Typography>
+
+          <Box component="ul" sx={{ pl: 2, '& li': { mb: 1.5 } }}>
+            <Typography component="li" variant="body2">
+              <strong>Payment Authorization:</strong> I authorize an application processing fee of <strong>$100.00 (USD)</strong> to be charged to my payment method immediately upon submission of this application.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Purpose:</strong> This fee covers the costs associated with processing my rental application, including but not limited to credit checks, background verification, employment verification, and administrative processing.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Refund Policy:</strong> If you decide you are no longer interested in the apartment or property, the <strong>$100 application fee is refundable</strong>. You may request a refund by contacting the property owner or management. However, once the application processing has been completed (credit checks, background verification), the fee may not be refunded as the services have been rendered.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Secure Payment:</strong> Payment will be processed securely through Stripe, a PCI DSS Level 1 compliant payment processor. My payment information will not be stored on this platform.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Receipt:</strong> A digital receipt will be automatically generated and sent to my email address ({formData.email}) upon successful payment completion.
+            </Typography>
+            <Typography component="li" variant="body2">
+              <strong>Application Processing:</strong> My application will not be reviewed or processed until the application fee has been successfully paid in full.
+            </Typography>
+          </Box>
+
+          <Alert severity="warning" sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="body2">
+              <strong>Important:</strong> You will be redirected to a secure payment page immediately after submitting this application. Your application will remain in "pending" status until the $100 application fee is paid.
+            </Typography>
+          </Alert>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={paymentConsent}
+                onChange={(e) => setPaymentConsent(e.target.checked)}
+                color="primary"
+                required
+              />
+            }
+            label={
+              <Typography variant="body2">
+                <strong>I have read and agree to the terms above. I authorize the $100 application fee payment and understand the refund policy.</strong>
+              </Typography>
+            }
+            sx={{ mt: 2, alignItems: 'flex-start', '& .MuiFormControlLabel-label': { mt: 0.5 } }}
+          />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+
+  const getStepContent = (step: number) => {
+    switch (step) {
+      case 0:
+        return renderPersonalInfo();
+      case 1:
+        return renderEmploymentInfo();
+      case 2:
+        return renderReferences();
+      case 3:
+        return renderReview();
+      default:
+        return 'Unknown step';
+    }
+  };
+
+  if (success) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 3,
+        }}
+      >
+        <Container maxWidth="sm">
+          <Paper sx={{ p: 4, textAlign: 'center' }}>
+            <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
+              Application Submitted!
+            </Typography>
+            <Alert severity="info" sx={{ mt: 2, mb: 3, textAlign: 'left' }}>
+              <Typography variant="body1" gutterBottom>
+                <strong>Payment Required:</strong> A $100 application fee is required to complete your application.
+              </Typography>
+              <Typography variant="body2">
+                Redirecting you to the secure payment page...
+              </Typography>
+            </Alert>
+            <Typography variant="body2" color="textSecondary">
+              You will receive a confirmation email at <strong>{formData.email}</strong> after payment is completed.
+            </Typography>
+          </Paper>
+        </Container>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="md">
+        <Paper sx={{ p: 4, borderRadius: 2 }}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <DescriptionIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h4" gutterBottom>
+              Rental Application
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              Complete this form to apply for the property
+            </Typography>
+          </Box>
+
+          {property && (
+            <Alert severity="info" sx={{ mb: 3 }}>
+              <strong>{property.title}</strong> - ${property.price}/month
+              <br />
+              {property.address.city}, {property.address.state}
+            </Alert>
+          )}
+
+          <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box sx={{ mb: 4 }}>{getStepContent(activeStep)}</Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              variant="outlined"
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            {activeStep === steps.length - 1 ? (
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={loading || !paymentConsent}
+                size="large"
+              >
+                {loading ? 'Submitting...' : 'Submit Application & Proceed to Payment'}
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={handleNext} size="large">
+                Next
+              </Button>
+            )}
+          </Box>
+        </Paper>
+
+        <Box sx={{ textAlign: 'center', mt: 3 }}>
+          <Typography variant="body2" sx={{ color: 'white' }}>
+            © 2026 Rental Management System. All rights reserved.
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+export default PublicApplicationForm;
