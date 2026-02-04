@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Grid,
   Paper,
   Typography,
   Box,
@@ -126,10 +125,10 @@ const DashboardPage: React.FC = () => {
         Dashboard Overview
       </Typography>
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
         {statCards.map((card, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
-            <Card sx={{ bgcolor: card.color, color: 'white' }}>
+          <Box key={index} sx={{ flex: '1 1 300px', minWidth: 0 }}>
+            <Card sx={{ bgcolor: card.color, color: 'white', height: '100%' }}>
               <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                   <Box>
@@ -142,12 +141,12 @@ const DashboardPage: React.FC = () => {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+        <Box sx={{ flex: '1 1 500px', minWidth: 0 }}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Users by Role
@@ -172,9 +171,9 @@ const DashboardPage: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </Paper>
-        </Grid>
+        </Box>
 
-        <Grid item xs={12} md={6}>
+        <Box sx={{ flex: '1 1 500px', minWidth: 0 }}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Properties by Status
@@ -199,26 +198,26 @@ const DashboardPage: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </Paper>
-        </Grid>
+        </Box>
+      </Box>
 
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Applications by Status
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={applicationStatusData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Paper>
-        </Grid>
-      </Grid>
+      <Box sx={{ mt: 3 }}>
+        <Paper sx={{ p: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            Applications by Status
+          </Typography>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={applicationStatusData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Box>
     </Box>
   );
 };
